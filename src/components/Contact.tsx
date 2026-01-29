@@ -138,8 +138,8 @@ const Contact = () => {
 
           <div className="space-y-6">
             <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-white/20 transition-all">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="text-[hsl(210,55%,45%)]">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <div className="text-white bg-linear-to-r from-primary to-secondary p-4 rounded-xl">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M3 8L10.89 13.26C11.23 13.48 11.61 13.59 12 13.59C12.39 13.59 12.77 13.48 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z"
@@ -151,29 +151,29 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-[hsl(0,0%,98%)] mb-1">
+                  <h3 className="text-center text-lg text-text-secondary mb-1">
                     {t("contact.info.email")}
                   </h3>
                   <a
-                    href="mailto:hammam@example.com"
-                    className="text-[hsl(0,0%,75%)] hover:text-[hsl(210,55%,45%)] transition-colors duration-300"
+                    href="mailto:hmam.swid@gamil.com"
+                    className="text-center text-xl font-semibold text-text-primary hover:text-primary transition-colors duration-300"
                   >
-                    hammam@example.com
+                    hmam.swid@gamil.com
                   </a>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-white/20 transition-all">
-              <h3 className="text-lg font-semibold text-[hsl(0,0%,98%)] mb-4">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-text-primary text-center mb-4">
                 {t("contact.social.title")}
               </h3>
-              <div className="flex gap-4">
+              <div className="flex gap-4 justify-center">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Hammam-swid"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
+                  className="w-12 h-12 flex items-center justify-center bg-bg-tertiary border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"
@@ -186,10 +186,10 @@ const Contact = () => {
                 </a>
 
                 <a
-                  href="https://linkedin.com"
+                  href="https://linkedin.com/in/همام-سويد-304788264"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
+                  className="w-12 h-12 flex items-center justify-center bg-bg-tertiary border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"
@@ -205,7 +205,7 @@ const Contact = () => {
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
+                  className="w-12 h-12 flex items-center justify-center bg-bg-tertiary border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"
