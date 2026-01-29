@@ -29,7 +29,7 @@ export const useScrollTrigger = (
   triggerProps: ScrollTrigger.Vars = {},
 ) => {
   useEffect(() => {
-    if (!element.current) return;
+    if (!element.current) return () => {};
 
     const animation = gsap.from(element.current, {
       ...animationProps,
@@ -55,7 +55,7 @@ export const useFadeInUp = (dependencies: React.DependencyList = []) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) return () => {};
 
     const animation = gsap.from(ref.current, {
       opacity: 0,
@@ -84,7 +84,7 @@ export const useStaggerAnimation = <T extends HTMLElement = HTMLDivElement>(
   const containerRef = useRef<T>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) return () => {};
 
     const children = containerRef.current.children;
 
@@ -114,7 +114,7 @@ export const useTextReveal = (dependencies: React.DependencyList = []) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) return () => {};
 
     const animation = gsap.from(ref.current, {
       opacity: 0,
@@ -137,7 +137,7 @@ export const useParallax = (speed = 0.5) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) return () => {};
 
     const animation = gsap.to(ref.current, {
       yPercent: -50 * speed,

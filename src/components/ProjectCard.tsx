@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 import type { Project } from "../data/projects";
-import "./ProjectCard.css";
 
 interface ProjectCardProps {
   project: Project;
@@ -71,9 +70,15 @@ const ProjectCard = ({ project, currentLang }: ProjectCardProps) => {
   }, []);
 
   return (
-    <div ref={cardRef} className="project-card card">
-      <div ref={imageRef} className="project-image">
-        <div className="project-image-placeholder">
+    <div
+      ref={cardRef}
+      className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-xl border border-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:border-primary/30"
+    >
+      <div
+        ref={imageRef}
+        className="w-full h-48 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden"
+      >
+        <div className="flex items-center justify-center">
           <svg
             width="100"
             height="100"
@@ -100,32 +105,37 @@ const ProjectCard = ({ project, currentLang }: ProjectCardProps) => {
         </div>
       </div>
 
-      <div className="project-content">
-        <h3 className="project-title">{project.title[currentLang]}</h3>
-        <p className="project-description">
+      <div className="p-6">
+        <h3 className="text-xl md:text-2xl font-bold text-text-primary mb-3">
+          {project.title[currentLang]}
+        </h3>
+        <p className="text-base text-text-secondary mb-4 line-clamp-3">
           {project.description[currentLang]}
         </p>
 
-        <div className="project-technologies">
+        <div className="flex flex-wrap gap-2 mb-6">
           {project.technologies.slice(0, 4).map((tech, index) => (
-            <span key={index} className="tech-badge">
+            <span
+              key={index}
+              className="px-3 py-1 text-sm font-medium text-primary bg-primary/10 border border-primary/20 rounded-md"
+            >
               {tech}
             </span>
           ))}
           {project.technologies.length > 4 && (
-            <span className="tech-badge">
+            <span className="px-3 py-1 text-sm font-medium text-primary bg-primary/10 border border-primary/20 rounded-md">
               +{project.technologies.length - 4}
             </span>
           )}
         </div>
 
-        <div className="project-links">
+        <div className="flex gap-3">
           {project.demoUrl && (
             <a
               href={project.demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="project-link"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-primary bg-primary/20 border border-primary/30 rounded-lg hover:bg-primary hover:text-white transition-all duration-300"
             >
               <svg
                 width="20"
@@ -155,7 +165,7 @@ const ProjectCard = ({ project, currentLang }: ProjectCardProps) => {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="project-link"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-primary bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg hover:bg-[rgba(255,255,255,0.1)] hover:border-text-primary transition-all duration-300"
             >
               <svg
                 width="20"

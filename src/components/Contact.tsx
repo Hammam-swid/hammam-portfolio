@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import "./Contact.css";
 
 interface ContactFormData {
   name: string;
@@ -41,30 +40,49 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="contact section">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">{t("contact.title")}</h2>
-          <p className="section-subtitle">{t("contact.subtitle")}</p>
+    <section
+      id="contact"
+      className="py-16 md:py-24 bg-[hsl(220,20%,12%)] relative overflow-hidden"
+    >
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-[hsl(0,0%,98%)]">
+            {t("contact.title")}
+          </h2>
+          <p className="text-lg text-[hsl(0,0%,75%)] max-w-2xl mx-auto leading-relaxed">
+            {t("contact.subtitle")}
+          </p>
         </div>
 
-        <div className="contact-content">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="contact-form glass"
+            className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8 hover:border-white/20 transition-all"
           >
-            <div className="form-group">
-              <label htmlFor="name">{t("contact.form.name")}</label>
+            <div className="mb-6">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-[hsl(0,0%,98%)] mb-2"
+              >
+                {t("contact.form.name")}
+              </label>
               <input
                 id="name"
                 type="text"
                 {...register("name", { required: true })}
-                className={errors.name ? "error" : ""}
+                className={`w-full px-4 py-3 bg-[hsl(220,15%,16%)] border ${
+                  errors.name ? "border-red-500" : "border-white/10"
+                } rounded-lg text-[hsl(0,0%,98%)] focus:outline-none focus:border-[hsl(210,55%,45%)] focus:ring-2 focus:ring-[hsl(210,55%,45%)]/20 transition-all duration-300`}
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="email">{t("contact.form.email")}</label>
+            <div className="mb-6">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-[hsl(0,0%,98%)] mb-2"
+              >
+                {t("contact.form.email")}
+              </label>
               <input
                 id="email"
                 type="email"
@@ -72,23 +90,32 @@ const Contact = () => {
                   required: true,
                   pattern: /^\S+@\S+$/i,
                 })}
-                className={errors.email ? "error" : ""}
+                className={`w-full px-4 py-3 bg-[hsl(220,15%,16%)] border ${
+                  errors.email ? "border-red-500" : "border-white/10"
+                } rounded-lg text-[hsl(0,0%,98%)] focus:outline-none focus:border-[hsl(210,55%,45%)] focus:ring-2 focus:ring-[hsl(210,55%,45%)]/20 transition-all duration-300`}
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="message">{t("contact.form.message")}</label>
+            <div className="mb-6">
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-[hsl(0,0%,98%)] mb-2"
+              >
+                {t("contact.form.message")}
+              </label>
               <textarea
                 id="message"
                 rows={5}
                 {...register("message", { required: true })}
-                className={errors.message ? "error" : ""}
+                className={`w-full px-4 py-3 bg-[hsl(220,15%,16%)] border ${
+                  errors.message ? "border-red-500" : "border-white/10"
+                } rounded-lg text-[hsl(0,0%,98%)] focus:outline-none focus:border-[hsl(210,55%,45%)] focus:ring-2 focus:ring-[hsl(210,55%,45%)]/20 transition-all duration-300 resize-none`}
               />
             </div>
 
             <button
               type="submit"
-              className="btn btn-primary"
+              className="w-full px-6 py-3 font-semibold bg-gradient-to-r from-[hsl(210,55%,45%)] to-[hsl(180,60%,50%)] text-white rounded-lg hover:opacity-90 hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/30 transition-all duration-300 disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting
@@ -97,41 +124,56 @@ const Contact = () => {
             </button>
 
             {submitStatus === "success" && (
-              <p className="form-message success">
+              <p className="mt-4 text-green-400 text-center">
                 {t("contact.form.success")}
               </p>
             )}
 
             {submitStatus === "error" && (
-              <p className="form-message error">{t("contact.form.error")}</p>
+              <p className="mt-4 text-red-400 text-center">
+                {t("contact.form.error")}
+              </p>
             )}
           </form>
 
-          <div className="contact-info">
-            <div className="info-card card">
-              <div className="info-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3 8L10.89 13.26C11.23 13.48 11.61 13.59 12 13.59C12.39 13.59 12.77 13.48 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+          <div className="space-y-6">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-white/20 transition-all">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="text-[hsl(210,55%,45%)]">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M3 8L10.89 13.26C11.23 13.48 11.61 13.59 12 13.59C12.39 13.59 12.77 13.48 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-[hsl(0,0%,98%)] mb-1">
+                    {t("contact.info.email")}
+                  </h3>
+                  <a
+                    href="mailto:hammam@example.com"
+                    className="text-[hsl(0,0%,75%)] hover:text-[hsl(210,55%,45%)] transition-colors duration-300"
+                  >
+                    hammam@example.com
+                  </a>
+                </div>
               </div>
-              <h3>{t("contact.info.email")}</h3>
-              <a href="mailto:hammam@example.com">hammam@example.com</a>
             </div>
 
-            <div className="social-links">
-              <h3>{t("contact.social.title")}</h3>
-              <div className="social-icons">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-white/20 transition-all">
+              <h3 className="text-lg font-semibold text-[hsl(0,0%,98%)] mb-4">
+                {t("contact.social.title")}
+              </h3>
+              <div className="flex gap-4">
                 <a
                   href="https://github.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-icon"
+                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"
@@ -147,7 +189,7 @@ const Contact = () => {
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-icon"
+                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"
@@ -163,7 +205,7 @@ const Contact = () => {
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-icon"
+                  className="w-12 h-12 flex items-center justify-center bg-[hsl(220,15%,16%)] border border-white/10 rounded-lg text-[hsl(0,0%,98%)] hover:text-[hsl(210,55%,45%)] hover:border-[hsl(210,55%,45%)] hover:shadow-lg hover:shadow-[hsl(210,55%,45%)]/20 transition-all duration-300"
                 >
                   <svg
                     width="24"

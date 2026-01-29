@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import gsap from "gsap";
-import "./Navigation.css";
 
 const Navigation = () => {
   const { t, i18n } = useTranslation();
@@ -61,21 +60,32 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className={`navigation ${isScrolled ? "scrolled" : ""}`}>
-      <div className="container">
-        <div className="nav-content">
+    <nav
+      className={`fixed top-0 left-0 w-full z-[200] py-4 transition-all duration-300 ease-out ${
+        isScrolled
+          ? "bg-[rgba(255,255,255,0.05)] backdrop-blur-[20px] border-b border-[rgba(255,255,255,0.1)] shadow-lg py-3"
+          : ""
+      }`}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className="nav-logo">
-            <img src="/logo.png" alt="logo" style={{ height: "60px" }} />
+          <div className="font-display text-2xl md:text-3xl font-bold cursor-pointer transition-transform duration-300 ease-out hover:scale-105">
+            <button
+              onClick={() => scrollToSection("hero")}
+              className="bg-transparent border-0 cursor-pointer"
+            >
+              <img src="/logo.png" alt="logo" className="h-[60px]" />
+            </button>
           </div>
 
           {/* Desktop Navigation */}
-          <ul className="nav-links hide-mobile">
+          <ul className="hidden md:flex items-center gap-6 lg:gap-8 list-none m-0 p-0">
             {navItems.map((item) => (
               <li key={item.key}>
                 <button
                   onClick={() => scrollToSection(item.id)}
-                  className="nav-link"
+                  className="group bg-transparent border-none text-text-secondary font-primary text-base font-medium cursor-pointer px-3 py-2 relative transition-colors duration-300 ease-out hover:text-text-primary after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300 hover:after:w-full"
                 >
                   {t(`nav.${item.key}`)}
                 </button>
@@ -84,10 +94,10 @@ const Navigation = () => {
           </ul>
 
           {/* Language Toggle & Mobile Menu Button */}
-          <div className="nav-actions">
+          <div className="flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="btn lang-toggle"
+              className="px-4 py-2 text-sm font-semibold rounded-md bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-text-primary transition-all duration-300 ease-out hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:border-transparent hover:shadow-[0_0_20px_rgba(66,135,245,0.4)]"
               aria-label="Toggle Language"
             >
               {currentLanguage === "en" ? "AR" : "EN"}
@@ -95,13 +105,25 @@ const Navigation = () => {
 
             <button
               onClick={toggleMobileMenu}
-              className="mobile-menu-btn hide-desktop"
+              className="md:hidden bg-transparent border-none p-2 cursor-pointer"
               aria-label="Toggle Menu"
             >
-              <span className={`hamburger ${isMobileMenuOpen ? "open" : ""}`}>
-                <span></span>
-                <span></span>
-                <span></span>
+              <span className="flex flex-col gap-[5px] w-6">
+                <span
+                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
+                    isMobileMenuOpen ? "rotate-45 translate-y-[7px]" : ""
+                  }`}
+                ></span>
+                <span
+                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
+                    isMobileMenuOpen ? "opacity-0" : ""
+                  }`}
+                ></span>
+                <span
+                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
+                    isMobileMenuOpen ? "-rotate-45 -translate-y-[7px]" : ""
+                  }`}
+                ></span>
               </span>
             </button>
           </div>
@@ -109,13 +131,13 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="nav-mobile-menu hide-desktop">
-            <ul>
+          <div className="md:hidden nav-mobile-menu py-6 mt-4 bg-[rgba(255,255,255,0.05)] backdrop-blur-[20px] rounded-lg border border-[rgba(255,255,255,0.1)]">
+            <ul className="flex flex-col gap-2 list-none m-0 p-0">
               {navItems.map((item) => (
                 <li key={item.key}>
                   <button
                     onClick={() => scrollToSection(item.id)}
-                    className="nav-link"
+                    className="w-full text-center px-3 py-3 text-lg bg-transparent border-none text-text-secondary font-primary font-medium cursor-pointer transition-colors duration-300 ease-out hover:text-text-primary"
                   >
                     {t(`nav.${item.key}`)}
                   </button>
