@@ -1,12 +1,67 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { projects } from "../data/projects";
+import { ProjectsService } from "../services/ProjectsService";
+import type { Project } from "../types";
 import ProjectCard from "./ProjectCard";
 
 const Projects = () => {
   const { t, i18n } = useTranslation();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const currentLang = i18n.language as "en" | "ar";
-  const featuredProjects = projects.filter((project) => project.featured);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const data = await ProjectsService.getFeatured();
+        setProjects(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load projects",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return (
+      <section
+        id="projects"
+        className="py-16 md:py-24 bg-[hsl(220,25%,8%)] relative overflow-hidden"
+      >
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-12 bg-white/10 rounded w-64 mx-auto mb-4"></div>
+              <div className="h-6 bg-white/10 rounded w-96 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section
+        id="projects"
+        className="py-16 md:py-24 bg-[hsl(220,25%,8%)] relative overflow-hidden"
+      >
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="text-center text-red-400">
+            <p>{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -24,7 +79,7 @@ const Projects = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProjects.map((project) => (
+          {projects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}

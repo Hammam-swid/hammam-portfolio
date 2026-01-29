@@ -105,7 +105,7 @@ const Hero = () => {
           <div className="absolute w-[40vw] h-[40vw] bg-secondary -bottom-[10%] -right-[10%] rounded-full blur-[100px] opacity-30 animate-float animation-delay-[5s]"></div>
           <div className="absolute w-[30vw] h-[30vw] bg-accent top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[80px] opacity-20 -z-10 animate-pulse-glow"></div>
         </div>
-        <div className="hero-glow absolute top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 z-0 blur-3xl opacity-20 bg-gradient-to-r from-secondary/30 via-primary/20 to-transparent"></div>
+        <div className="hero-glow absolute top-0 left-0 w-[800px] h-[800px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 z-0 blur-3xl opacity-80 bg-linear-to-r from-secondary/30 to-primary"></div>
       </div>
 
       <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center relative z-20 text-center lg:text-left justify-items-center lg:justify-items-start">
@@ -192,7 +192,7 @@ const Hero = () => {
 
       <div className="absolute bottom-10 right-1/2 translate-x-1/2 lg:right-10 lg:translate-x-0 flex flex-row lg:flex-col items-center gap-2 writing-mode-horizontal lg:writing-mode-vertical">
         <div className="w-px lg:w-[2px] h-[30px] lg:h-[60px] bg-linear-to-b from-text-tertiary to-transparent relative overflow-hidden after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-1/2 after:bg-primary after:animate-[drop_2s_cubic-bezier(0.77,0,0.175,1)_infinite]"></div>
-        <span className="font-mono text-xs text-text-tertiary tracking-[0.1em] uppercase">
+        <span className="font-mono text-xs text-text-tertiary tracking-widest uppercase">
           {t("hero.scrollDown")}
         </span>
       </div>

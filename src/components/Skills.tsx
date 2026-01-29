@@ -1,10 +1,72 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { getSkillsByCategory } from "../data/skills";
+import { SkillsService } from "../services/SkillsService";
+import type { Skill } from "../types";
 
 const Skills = () => {
   const { t } = useTranslation();
+  const [skillsByCategory, setSkillsByCategory] = useState<
+    Record<string, Skill[]>
+  >({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const categories = ["frontend", "backend", "devops", "tools"] as const;
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        setLoading(true);
+        const skillsData: Record<string, Skill[]> = {};
+
+        for (const category of categories) {
+          const data = await SkillsService.getByCategory(category);
+          skillsData[category] = data;
+        }
+
+        setSkillsByCategory(skillsData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load skills");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  if (loading) {
+    return (
+      <section
+        id="skills"
+        className="py-16 md:py-24 bg-[hsl(220,25%,8%)] relative overflow-hidden"
+      >
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-12 bg-white/10 rounded w-64 mx-auto mb-4"></div>
+              <div className="h-6 bg-white/10 rounded w-96 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section
+        id="skills"
+        className="py-16 md:py-24 bg-[hsl(220,25%,8%)] relative overflow-hidden"
+      >
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="text-center text-red-400">
+            <p>{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -29,7 +91,7 @@ const Skills = () => {
 
         <div className="flex flex-col gap-16">
           {categories.map((category) => {
-            const categorySkills = getSkillsByCategory(category);
+            const categorySkills = skillsByCategory[category] || [];
 
             return (
               <div key={category} className="relative group">
