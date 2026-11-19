@@ -130,7 +130,7 @@ export default function Contact() {
           data-reveal="1"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          className="spot flex flex-col gap-5 p-6 md:p-8"
+          className="spot flex flex-col gap-5 p-5 md:p-8"
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <Field id="c-name" label={t("contact.form.name")} error={errors.name?.message}>
@@ -166,18 +166,18 @@ export default function Contact() {
               {...register("message", { required: t("contact.form.required") })}
             />
           </Field>
-          <div className="flex flex-wrap gap-3">
-            <Magnetic>
-              <button type="submit" className="btn btn-primary px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Magnetic className="w-full sm:w-auto">
+              <button type="submit" className="btn btn-primary w-full px-8">
                 {t("contact.form.send")}
                 <Icon name="arrow" size={18} className="rtl:-scale-x-100" />
               </button>
             </Magnetic>
-            <Magnetic>
+            <Magnetic className="w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleSubmit(onWhatsApp)}
-                className="btn border border-[#25d366]/60 bg-[#25d366]/10 text-[#25d366] hover:bg-[#25d366]/20"
+                className="btn w-full border border-[#25d366]/60 bg-[#25d366]/10 text-[#25d366] hover:bg-[#25d366]/20"
               >
                 <Icon name="whatsapp" size={18} />
                 {t("contact.form.sendWhatsapp")}

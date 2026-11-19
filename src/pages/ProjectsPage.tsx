@@ -88,13 +88,22 @@ export default function ProjectsPage() {
   // Sliding pill under the active filter
   useLayoutEffect(() => {
     const btn = tabsRef.current?.querySelector<HTMLElement>(`[data-f="${filter}"]`);
-    if (!btn || !pillRef.current) return;
-    gsap.to(pillRef.current, {
-      x: btn.offsetLeft,
-      width: btn.offsetWidth,
-      duration: 0.45,
-      ease: "power3.out",
-    });
+    const pill = pillRef.current;
+    const row = tabsRef.current;
+    if (!btn || !pill || !row) return;
+    // Measure from where the pill is now, so it lands correctly in LTR and
+    // RTL and while the tab row is scrolled sideways on phones.
+    gsap.killTweensOf(pill);
+    const x =
+      Number(gsap.getProperty(pill, "x")) + btn.getBoundingClientRect().left - pill.getBoundingClientRect().left;
+    gsap.to(pill, { x, width: btn.offsetWidth, duration: 0.45, ease: "power3.out" });
+    // Keep the active tab visible inside the scrollable row
+    const r = row.getBoundingClientRect();
+    const b = btn.getBoundingClientRect();
+    if (b.left < r.left || b.right > r.right) {
+      // instant: a smooth scroll gets cancelled by the Flip re-layout below
+      btn.scrollIntoView({ inline: "nearest", block: "nearest" });
+    }
   }, [filter, lang, projects]);
 
   const counts = useMemo(() => {
@@ -133,7 +142,7 @@ export default function ProjectsPage() {
             ref={tabsRef}
             role="group"
             aria-label={t("projects.pageTitle")}
-            className="relative flex gap-1 overflow-x-auto rounded-full border border-line bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] p-1 backdrop-blur-xl"
+            className="no-scrollbar relative flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] p-1 backdrop-blur-xl"
           >
             <span ref={pillRef} aria-hidden="true" className="absolute left-0 top-1 h-[calc(100%-8px)] rounded-full bg-primary" />
             {FILTERS.map((f) => (
@@ -143,7 +152,7 @@ export default function ProjectsPage() {
                 type="button"
                 aria-pressed={filter === f}
                 onClick={() => changeFilter(f)}
-                className={`relative z-10 flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                className={`relative z-10 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors sm:gap-2 sm:px-4 ${
                   filter === f ? "text-on-primary" : "text-muted hover:text-ink"
                 }`}
               >
