@@ -36,7 +36,7 @@ export default function Experience() {
             onLeaveBack: () => dot?.classList.remove("is-on"),
           });
           gsap.from(item.querySelector("[data-body]"), {
-            x: isRTL ? -60 : 60,
+            x: isRTL ? -40 : 40,
             autoAlpha: 0,
             duration: 0.9,
             ease: "power3.out",
@@ -63,9 +63,9 @@ export default function Experience() {
           <SectionHeading label={t("experience.label")} title={t("experience.title")} subtitle={t("experience.subtitle")} />
         </div>
 
-        <ol ref={list} className="relative m-0 flex list-none flex-col gap-10 p-0 ps-10 md:ps-14">
-          <span aria-hidden="true" className="absolute bottom-2 start-[11px] top-2 w-[2px] rounded bg-line md:start-[15px]" />
-          <span data-line aria-hidden="true" className="absolute bottom-2 start-[11px] top-2 w-[2px] origin-top rounded md:start-[15px]" style={{ background: "linear-gradient(to bottom,#71aecf,#2b87b8,#222a60)" }} />
+        <ol ref={list} className="relative m-0 flex list-none flex-col gap-6 p-0 ps-7 md:gap-10 md:ps-14">
+          <span aria-hidden="true" className="absolute bottom-2 start-[7px] top-2 w-[2px] rounded bg-line md:start-[15px]" />
+          <span data-line aria-hidden="true" className="absolute bottom-2 start-[7px] top-2 w-[2px] origin-top rounded md:start-[15px]" style={{ background: "linear-gradient(to bottom,#71aecf,#2b87b8,#222a60)" }} />
 
           {items?.map((x) => {
             const current = !x.endDate;
@@ -74,11 +74,11 @@ export default function Experience() {
                 <span
                   data-dot
                   aria-hidden="true"
-                  className="absolute -start-10 top-7 grid h-6 w-6 place-items-center rounded-full border-2 border-line-strong bg-bg transition-all duration-500 md:-start-14 md:h-8 md:w-8 [&.is-on]:scale-110 [&.is-on]:border-accent [&.is-on]:shadow-[0_0_0_6px_var(--tint)]"
+                  className="absolute -start-7 top-7 grid h-4 w-4 place-items-center rounded-full border-2 border-line-strong bg-bg transition-all duration-500 md:-start-14 md:h-8 md:w-8 [&.is-on]:scale-110 [&.is-on]:border-accent [&.is-on]:shadow-[0_0_0_6px_var(--tint)]"
                 >
-                  <span className="h-2 w-2 rounded-full bg-accent md:h-2.5 md:w-2.5" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent md:h-2.5 md:w-2.5" />
                 </span>
-                <article data-body className="spot flex flex-col gap-4 p-6 md:p-8">
+                <article data-body className="spot flex flex-col gap-4 p-5 md:p-8">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
                       <span className="text-sm font-medium text-accent">{t(`experience.kinds.${x.kind}`)}</span>

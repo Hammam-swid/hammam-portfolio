@@ -73,6 +73,13 @@
 }
 
 @layer base {
+  html,
+  body {
+    /* clip, not hidden: stops off-screen animation start states from widening
+       the mobile layout viewport, and keeps position: sticky working */
+    overflow-x: clip;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -86,7 +93,6 @@
     line-height: 1.75;
     color: var(--ink);
     background: var(--bg);
-    overflow-x: hidden;
     transition: background-color 300ms ease, color 300ms ease;
   }
 
@@ -350,4 +356,13 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Horizontal scrollers that are swiped on touch screens */
+.no-scrollbar {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
