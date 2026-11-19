@@ -40,11 +40,28 @@ export default function MediaFrame({
     else v.pause();
   }, [active, mode]);
 
-  if (!media || failed) return <Placeholder title={title} seed={seed} video={media?.type === "video"} className={className} compact={mode === "thumb"} />;
+  if (!media || failed)
+    return (
+      <Placeholder
+        title={title}
+        seed={seed}
+        video={media?.type === "video"}
+        className={className}
+        compact={mode === "thumb"}
+      />
+    );
 
   if (media.type === "video") {
     if (mode === "thumb" && media.poster) {
-      return <Img src={media.poster} alt="" className={className} onError={() => setFailed()} />;
+      return (
+        <Img
+          loading="lazy"
+          src={media.poster}
+          alt=""
+          className={className}
+          onError={() => setFailed()}
+        />
+      );
     }
     return (
       <video
@@ -61,7 +78,8 @@ export default function MediaFrame({
         preload="metadata"
         onLoadedMetadata={(e) => {
           const v = e.currentTarget;
-          if (v.videoWidth && v.videoHeight) onRatio?.(v.videoWidth / v.videoHeight);
+          if (v.videoWidth && v.videoHeight)
+            onRatio?.(v.videoWidth / v.videoHeight);
         }}
         onError={() => setFailed()}
       />
@@ -74,21 +92,26 @@ export default function MediaFrame({
     // Whole image, never cropped; a blurred copy fills the letterbox so
     // portrait (phone) screenshots don't float in an empty black box.
     return (
-      <div className={`relative h-full w-full overflow-hidden bg-[#05060f] ${className}`}>
+      <div
+        className={`relative h-full w-full overflow-hidden bg-[#05060f] ${className}`}
+      >
         <img
+          loading="lazy"
           src={media.src}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl"
         />
         <img
+          loading="lazy"
           src={media.src}
           alt={alt}
           decoding="async"
           className="relative h-full w-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
           onLoad={(e) => {
             const i = e.currentTarget;
-            if (i.naturalWidth && i.naturalHeight) onRatio?.(i.naturalWidth / i.naturalHeight);
+            if (i.naturalWidth && i.naturalHeight)
+              onRatio?.(i.naturalWidth / i.naturalHeight);
           }}
           onError={() => setFailed()}
         />
@@ -97,11 +120,29 @@ export default function MediaFrame({
   }
 
   // Cards and thumbnails crop; anchor to the top so app headers stay in view
-  return <Img src={media.src} alt={alt} className={`object-cover object-top ${className}`} onError={() => setFailed()} />;
+  return (
+    <Img
+      loading="lazy"
+      src={media.src}
+      alt={alt}
+      className={`object-cover object-top ${className}`}
+      onError={() => setFailed()}
+    />
+  );
 }
 
-function Img({ className = "", ...rest }: React.ImgHTMLAttributes<HTMLImageElement>) {
-  return <img loading="lazy" decoding="async" className={`h-full w-full ${className}`} {...rest} />;
+function Img({
+  className = "",
+  ...rest
+}: React.ImgHTMLAttributes<HTMLImageElement>) {
+  return (
+    <img
+      loading="lazy"
+      decoding="async"
+      className={`h-full w-full ${className}`}
+      {...rest}
+    />
+  );
 }
 
 const HUES = [
@@ -148,7 +189,10 @@ function Placeholder({
             {layout !== 2 && (
               <div className="flex w-1/5 flex-col gap-2">
                 {[0, 1, 2, 3, 4].map((i) => (
-                  <span key={i} className={`h-2 ${bar} ${i === 1 ? "bg-[#71aecf]/70" : ""}`} />
+                  <span
+                    key={i}
+                    className={`h-2 ${bar} ${i === 1 ? "bg-[#71aecf]/70" : ""}`}
+                  />
                 ))}
               </div>
             )}
@@ -161,13 +205,21 @@ function Placeholder({
               {layout === 1 ? (
                 <div className="flex h-16 items-end gap-1.5">
                   {[40, 70, 55, 85, 60, 95, 75].map((h, i) => (
-                    <span key={i} className="flex-1 rounded-t bg-[#4e9bc4]/60" style={{ height: `${h}%` }} />
+                    <span
+                      key={i}
+                      className="flex-1 rounded-t bg-[#4e9bc4]/60"
+                      style={{ height: `${h}%` }}
+                    />
                   ))}
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
                   {[0, 1, 2, 3].map((i) => (
-                    <span key={i} className={`h-2.5 ${bar}`} style={{ width: `${90 - i * 12}%` }} />
+                    <span
+                      key={i}
+                      className={`h-2.5 ${bar}`}
+                      style={{ width: `${90 - i * 12}%` }}
+                    />
                   ))}
                 </div>
               )}

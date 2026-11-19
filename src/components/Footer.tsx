@@ -15,14 +15,23 @@ export default function Footer() {
           className="group block w-fit text-[clamp(28px,6vw,80px)] font-black leading-none tracking-tight rtl:ms-auto"
         >
           <span className="text-gradient">hmam.swid</span>
-          <span className="text-faint transition-colors group-hover:text-accent">@gmail.com</span>
+          <span className="text-faint transition-colors group-hover:text-accent">
+            @gmail.com
+          </span>
         </a>
         <div className="flex flex-wrap items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3">
-            <img src="/logo.png" alt={t("hero.name")} className="h-10 w-auto" />
+            <img
+              loading="lazy"
+              src="/logo.png"
+              alt={t("hero.name")}
+              className="h-10 w-auto"
+            />
           </Link>
           <div className="flex flex-col gap-1 text-sm text-faint">
-            <p className="m-0">{t("footer.copyright", { year: new Date().getFullYear() })}</p>
+            <p className="m-0">
+              {t("footer.copyright", { year: new Date().getFullYear() })}
+            </p>
             <p className="m-0">{t("footer.built")}</p>
           </div>
           <div className="flex flex-wrap gap-3">

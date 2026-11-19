@@ -160,6 +160,7 @@ export default function Navigation() {
           onClick={() => setOpen(false)}
         >
           <img
+            loading="lazy"
             src={theme === "light" ? "lightmode-logo.png" : "/logo.png"}
             alt=""
             className="h-10 w-auto md:h-11"
