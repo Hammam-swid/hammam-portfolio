@@ -1,72 +1,580 @@
 [
   {
-    "id": "1",
+    "id": "bathth-streaming",
     "title": {
-      "en": "E-Commerce Platform",
-      "ar": "منصة التجارة الإلكترونية"
+      "en": "Bathth — Video Streaming Platform",
+      "ar": "بثّ — منصة بث الفيديو"
+    },
+    "tagline": {
+      "en": "A self-hostable YouTube alternative: web, mobile app, admin panel and a transcoding backend.",
+      "ar": "بديل لليوتيوب قابل للاستضافة الذاتية: موقع ويب وتطبيق جوال ولوحة إدارة وخادم لمعالجة الفيديو."
     },
     "description": {
-      "en": "A full-stack e-commerce platform with React, Node.js, MongoDB, and Stripe integration. Features include user authentication, product management, shopping cart, and secure payments.",
-      "ar": "منصة تجارة إلكترونية متكاملة باستخدام React و Node.js و MongoDB وتكامل Stripe. تشمل الميزات المصادقة، إدارة المنتجات، عربة التسوق، والدفع الآمن."
+      "en": "Bathth is a full video platform I built end to end. Creators sign up, open a channel and upload videos up to 2 GB straight to object storage; a worker transcodes them with FFmpeg into adaptive HLS at 360p, 720p and 1080p. Viewers watch, like, comment, subscribe, search and browse latest, trending and subscription feeds — and short vertical videos. It ships as a server-rendered Arabic-first web app, a Flutter mobile app and an admin dashboard.",
+      "ar": "بثّ منصة فيديو متكاملة بنيتها من البداية للنهاية. ينشئ صانعو المحتوى قنواتهم ويرفعون فيديوهات حتى 2 جيجابايت مباشرة إلى التخزين، ثم يحوّلها عامل معالجة بـ FFmpeg إلى بث HLS متكيّف بدقة 360p و720p و1080p. يشاهد المستخدمون ويعجبون ويعلّقون ويشتركون ويبحثون ويتصفحون الأحدث والرائج والاشتراكات، إضافة إلى المقاطع القصيرة. تأتي المنصة كموقع ويب عربي أولاً يُعرض من الخادم، وتطبيق جوال بـ Flutter، ولوحة تحكم للإدارة."
     },
+    "role": {
+      "en": "Full-stack & Mobile Developer",
+      "ar": "مطور متكامل وتطبيقات جوال"
+    },
+    "year": "2026",
+    "category": "fullstack",
+    "technologies": [
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Redis",
+      "BullMQ",
+      "FFmpeg / HLS",
+      "Meilisearch",
+      "S3 storage",
+      "React Router (SSR)",
+      "Material UI",
+      "React Query",
+      "Flutter",
+      "BLoC",
+      "Docker"
+    ],
+    "highlights": {
+      "en": [
+        "NestJS REST API plus a separate FFmpeg transcoding worker fed by BullMQ queues",
+        "Direct-to-storage uploads and HLS playback via presigned URLs — video bytes never touch the API",
+        "Redis for rate limits, view de-duplication and a trending cache; Meilisearch for search",
+        "Server-rendered React web app with Material UI, Arabic RTL + English, light and dark themes",
+        "Admin dashboard with charts and data grids, and a Flutter mobile app with shorts and Google sign-in"
+      ],
+      "ar": [
+        "واجهة REST بـ NestJS وعامل منفصل لتحويل الفيديو بـ FFmpeg تغذيه طوابير BullMQ",
+        "رفع مباشر إلى التخزين وتشغيل HLS عبر روابط موقّعة — بيانات الفيديو لا تمر عبر الخادم",
+        "Redis لتحديد المعدّل ومنع تكرار المشاهدات وتخزين الرائج، و Meilisearch للبحث",
+        "موقع React يُعرض من الخادم بـ Material UI، عربي RTL وإنجليزي، بوضعين فاتح وداكن",
+        "لوحة إدارة بمخططات وجداول بيانات، وتطبيق جوال بـ Flutter فيه المقاطع القصيرة والدخول بحساب Google"
+      ]
+    },
+    "cover": "/projects/Bath%20Stream%20platfrom/01-home.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/01-home.png",
+        "caption": {
+          "en": "Home feed",
+          "ar": "الصفحة الرئيسية"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/02-watch.png",
+        "caption": {
+          "en": "Watch page",
+          "ar": "صفحة المشاهدة"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/03-comments.png",
+        "caption": {
+          "en": "Comments",
+          "ar": "التعليقات"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/01-home-mobile.png",
+        "caption": {
+          "en": "Home on mobile",
+          "ar": "الرئيسية على الجوال"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/04-shorts-mobile.png",
+        "caption": {
+          "en": "Shorts on mobile",
+          "ar": "المقاطع القصيرة على الجوال"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Bath%20Stream%20platfrom/05-shorts-comments-mobile.png",
+        "caption": {
+          "en": "Shorts comments",
+          "ar": "تعليقات المقاطع القصيرة"
+        }
+      }
+    ],
+    "featured": true
+  },
+  {
+    "id": "altebyan-school",
+    "title": {
+      "en": "Al-Tebyan School Management System",
+      "ar": "نظام التبيان لإدارة المدرسة"
+    },
+    "tagline": {
+      "en": "An offline desktop app that runs a whole school: students, timetable, attendance, finance and exams.",
+      "ar": "تطبيق سطح مكتب يعمل دون إنترنت لإدارة المدرسة كاملة: الطلبة والجدول والحضور والمالية والامتحانات."
+    },
+    "description": {
+      "en": "A Windows desktop application for Al-Tebyan basic-education school, built with Electron and an Arabic RTL interface. It works fully offline on a local SQLite database and covers student records with Excel import, timetables and attendance, fees, invoices, installments and PDF receipts, exams with grade calculation and ranking, a dashboard, and automatic backups with safe restore.",
+      "ar": "تطبيق سطح مكتب لنظام Windows لمدرسة التبيان للتعليم الأساسي، مبني بـ Electron بواجهة عربية RTL. يعمل دون إنترنت على قاعدة SQLite محلية، ويغطي سجلات الطلبة مع الاستيراد من Excel، والجدول الدراسي والحضور، والرسوم والفواتير والأقساط وإيصالات PDF، والامتحانات مع حساب الدرجات والترتيب، ولوحة تحكم، ونسخاً احتياطياً تلقائياً مع استعادة آمنة."
+    },
+    "role": {
+      "en": "Full-stack Desktop Developer",
+      "ar": "مطور تطبيقات سطح مكتب متكامل"
+    },
+    "year": "2026",
+    "category": "fullstack",
+    "technologies": [
+      "Electron",
+      "React",
+      "TypeScript",
+      "Ant Design",
+      "Tailwind CSS",
+      "React Query",
+      "Zustand",
+      "SQLite",
+      "Drizzle ORM",
+      "Zod",
+      "ExcelJS",
+      "Vitest",
+      "Playwright"
+    ],
+    "highlights": {
+      "en": [
+        "Offline-first: SQLite via better-sqlite3 and Drizzle ORM, with automatic migrations on update",
+        "Finance module: fee plans, bulk invoicing, installments, auto-allocated payments and sequential receipts",
+        "Timetable with conflict detection, daily or per-period attendance, and exam grading with ranking",
+        "Tested with 139 unit tests and 17 end-to-end scenarios; profiled on a 5,000-student database",
+        "Hardened Windows installer with Electron Fuses, data kept outside the app folder"
+      ],
+      "ar": [
+        "يعمل دون إنترنت: SQLite عبر better-sqlite3 و Drizzle ORM مع ترحيل تلقائي للقاعدة عند التحديث",
+        "وحدة مالية: خطط الرسوم والفوترة الجماعية والأقساط وتوزيع الدفعات تلقائياً وإيصالات متسلسلة",
+        "جدول دراسي يكشف التعارضات، وحضور يومي أو لكل حصة، وامتحانات بحساب الدرجات والترتيب",
+        "139 اختبار وحدة و17 سيناريو اختبار شامل، واختبار أداء على قاعدة بـ 5000 طالب",
+        "مثبّت Windows مُقوّى بـ Electron Fuses، والبيانات محفوظة خارج مجلد البرنامج"
+      ]
+    },
+    "cover": "/projects/Altebyan-system/dashboard.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/Altebyan-system/dashboard.png",
+        "caption": {
+          "en": "Dashboard",
+          "ar": "لوحة التحكم"
+        }
+      },
+      {
+        "type": "video",
+        "src": "/projects/Altebyan-system/tebyan_video.mp4",
+        "poster": "/projects/Altebyan-system/dashboard.png",
+        "caption": {
+          "en": "Promo video",
+          "ar": "فيديو تعريفي"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Altebyan-system/students.png",
+        "caption": {
+          "en": "Students",
+          "ar": "الطلبة"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/Altebyan-system/timetable.png",
+        "caption": {
+          "en": "Timetable",
+          "ar": "الجدول الدراسي"
+        }
+      }
+    ],
+    "featured": true
+  },
+  {
+    "id": "pos-system",
+    "title": {
+      "en": "Retail POS & Sales System",
+      "ar": "نظام المبيعات ونقاط البيع"
+    },
+    "tagline": {
+      "en": "A general-purpose point-of-sale desktop app for shops: checkout, stock, purchases and reports.",
+      "ar": "تطبيق سطح مكتب لنقاط البيع يناسب مختلف المتاجر: البيع والمخزون والمشتريات والتقارير."
+    },
+    "description": {
+      "en": "A desktop POS for retail stores, built with Electron and React. Cashiers ring up sales quickly with barcode lookup, while owners manage products, purchases, customers and suppliers, and expenses, then follow performance through charted sales reports with Excel export. Everything runs locally on SQLite, and the app adapts to the type of store or market it is set up for.",
+      "ar": "نظام نقاط بيع لسطح المكتب للمتاجر، مبني بـ Electron و React. يُنجز الكاشير عمليات البيع بسرعة مع البحث بالباركود، ويدير صاحب المتجر المنتجات والمشتريات والعملاء والموردين والمصروفات، ثم يتابع الأداء عبر تقارير مبيعات بمخططات مع تصدير إلى Excel. يعمل كل شيء محلياً على SQLite، ويتكيّف التطبيق مع نوع المتجر أو السوق المُعدّ له."
+    },
+    "role": {
+      "en": "Full-stack Desktop Developer",
+      "ar": "مطور تطبيقات سطح مكتب متكامل"
+    },
+    "year": "2026",
+    "category": "fullstack",
+    "technologies": [
+      "Electron",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Zustand",
+      "SQLite",
+      "TypeORM",
+      "Recharts",
+      "ExcelJS",
+      "Vitest",
+      "Playwright"
+    ],
+    "highlights": {
+      "en": [
+        "Fast checkout screen with barcode search and keyboard-friendly flow",
+        "Products, purchases, customers and suppliers, sales history and expenses",
+        "Sales reports with Recharts charts and Excel export via ExcelJS",
+        "Local SQLite database through TypeORM, behind a typed Electron IPC layer",
+        "Configurable per store or market type"
+      ],
+      "ar": [
+        "شاشة بيع سريعة مع البحث بالباركود وتدفق مناسب للوحة المفاتيح",
+        "إدارة المنتجات والمشتريات والعملاء والموردين وسجل المبيعات والمصروفات",
+        "تقارير مبيعات بمخططات Recharts وتصدير إلى Excel عبر ExcelJS",
+        "قاعدة SQLite محلية عبر TypeORM خلف طبقة IPC مُنمّطة في Electron",
+        "قابل للتخصيص حسب نوع المتجر أو السوق"
+      ]
+    },
+    "cover": "/projects/pos-system/home.jpg",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/pos-system/home.jpg",
+        "caption": {
+          "en": "Home",
+          "ar": "الرئيسية"
+        }
+      },
+      {
+        "type": "video",
+        "src": "/projects/pos-system/sales-system-promo.mp4",
+        "poster": "/projects/pos-system/home.jpg",
+        "caption": {
+          "en": "Promo video",
+          "ar": "فيديو تعريفي"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/pos-system/pos.jpg",
+        "caption": {
+          "en": "Point of sale",
+          "ar": "شاشة البيع"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/pos-system/reports.jpg",
+        "caption": {
+          "en": "Reports",
+          "ar": "التقارير"
+        }
+      }
+    ],
+    "featured": true
+  },
+  {
+    "id": "training-system",
+    "title": {
+      "en": "Training & Courses Management System",
+      "ar": "منظومة إدارة التدريب والدورات"
+    },
+    "tagline": {
+      "en": "End-to-end platform for running training programs, courses and trainees.",
+      "ar": "منصة متكاملة لإدارة البرامج التدريبية والدورات والمتدربين."
+    },
+    "description": {
+      "en": "I led the development team on this system as Team Leader while building both the frontend and the backend. The platform manages courses, trainers, trainees, scheduling and enrolment, with an architecture designed to scale as programs grow.",
+      "ar": "قدت فريق التطوير في هذه المنظومة بصفتي قائد الفريق، وبنيت الواجهتين الأمامية والخلفية. تدير المنصة الدورات والمدربين والمتدربين والجدولة والتسجيل، ببنية مصممة لتتوسع مع نمو البرامج."
+    },
+    "role": {
+      "en": "Team Leader · Full-stack",
+      "ar": "قائد الفريق · مطور متكامل"
+    },
+    "year": "2025",
+    "category": "fullstack",
     "technologies": [
       "React",
-      "Node.js",
-      "MongoDB",
-      "Express",
-      "Stripe",
-      "Redux"
+      "TypeScript",
+      "Redux Toolkit",
+      "React Query",
+      "shadcn/ui",
+      "Express.js",
+      "TypeORM",
+      "MySQL"
     ],
-    "image": "/projects/ecommerce.jpg",
-    "demoUrl": "https://demo.example.com",
-    "githubUrl": "https://github.com/yourusername/project",
-    "featured": true
+    "highlights": {
+      "en": [
+        "Led the team: task planning, code reviews and architecture decisions",
+        "Built REST APIs with Express, TypeScript and TypeORM on MySQL",
+        "Built the dashboard UI with React, Redux Toolkit, React Query and shadcn/ui"
+      ],
+      "ar": [
+        "قيادة الفريق: تخطيط المهام ومراجعة الكود وقرارات البنية",
+        "بناء واجهات REST باستخدام Express و TypeScript و TypeORM مع MySQL",
+        "بناء لوحة التحكم باستخدام React و Redux Toolkit و React Query و shadcn/ui"
+      ]
+    },
+    "cover": "/projects/training-system/cover.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/training-system/cover.png",
+        "caption": {
+          "en": "Dashboard overview",
+          "ar": "نظرة عامة على لوحة التحكم"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/training-system/courses.png",
+        "caption": {
+          "en": "Courses management",
+          "ar": "إدارة الدورات"
+        }
+      },
+      {
+        "type": "video",
+        "src": "/projects/training-system/demo.mp4",
+        "poster": "/projects/training-system/cover.png",
+        "caption": {
+          "en": "Walkthrough video",
+          "ar": "فيديو جولة في النظام"
+        }
+      }
+    ],
+    "featured": false
   },
   {
-    "id": "2",
+    "id": "marketplace-dashboard",
     "title": {
-      "en": "Task Management App",
-      "ar": "تطبيق إدارة المهام"
+      "en": "Marketplace Admin Dashboard",
+      "ar": "لوحة تحكم تطبيق متاجر"
+    },
+    "tagline": {
+      "en": "A scalable admin dashboard for managing stores, products, orders and customers.",
+      "ar": "لوحة تحكم قابلة للتوسع لإدارة المتاجر المنتجات والطلبات والعملاء."
     },
     "description": {
-      "en": "A collaborative task management application with real-time updates using Socket.io. Built with MERN stack featuring drag-and-drop functionality and team collaboration.",
-      "ar": "تطبيق إدارة مهام تعاوني مع تحديثات فورية باستخدام Socket.io. تم بناؤه باستخدام MERN مع ميزة السحب والإفلات والتعاون الجماعي."
+      "en": "Built at Adim Tech as part of the frontend team. I developed reusable React components with Tailwind CSS, integrated the backend APIs with Axios and React Query, and worked closely with the backend team to ship dynamic features.",
+      "ar": "طُوّرت في شركة Adim Tech ضمن فريق الواجهة الأمامية. بنيت مكونات React قابلة لإعادة الاستخدام مع Tailwind CSS، وربطت واجهات الخادم عبر Axios و React Query، وعملت مع فريق الخادم لإطلاق ميزات ديناميكية."
     },
-    "technologies": ["React", "Node.js", "MongoDB", "Socket.io", "TypeScript"],
-    "image": "/projects/taskmanager.jpg",
-    "demoUrl": "https://demo.example.com",
-    "githubUrl": "https://github.com/yourusername/project",
-    "featured": true
+    "role": {
+      "en": "Frontend Developer · Adim Tech",
+      "ar": "مطور واجهات أمامية · Adim Tech"
+    },
+    "year": "2025",
+    "category": "frontend",
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "React Query",
+      "Axios"
+    ],
+    "highlights": {
+      "en": [
+        "Reusable, modern component library with React and Tailwind CSS",
+        "API integration and caching with Axios and React Query",
+        "Code reviews and daily stand-ups to keep quality and pace"
+      ],
+      "ar": [
+        "مكتبة مكونات حديثة وقابلة لإعادة الاستخدام بـ React و Tailwind CSS",
+        "ربط الواجهات البرمجية والتخزين المؤقت عبر Axios و React Query",
+        "مراجعات كود واجتماعات يومية للحفاظ على الجودة والإيقاع"
+      ]
+    },
+    "cover": "/projects/ecommerce-dashboard/cover.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/ecommerce-dashboard/cover.png",
+        "caption": {
+          "en": "Store overview",
+          "ar": "نظرة عامة على المتجر"
+        }
+      },
+      {
+        "type": "image",
+        "src": "/projects/ecommerce-dashboard/orders.png",
+        "caption": {
+          "en": "Orders table",
+          "ar": "جدول الطلبات"
+        }
+      },
+      {
+        "type": "video",
+        "src": "/projects/ecommerce-dashboard/demo.mp4",
+        "poster": "/projects/ecommerce-dashboard/cover.png",
+        "caption": {
+          "en": "Feature demo",
+          "ar": "عرض الميزات"
+        }
+      }
+    ],
+    "featured": false
   },
   {
-    "id": "3",
+    "id": "employee-management",
     "title": {
-      "en": "Social Media Dashboard",
-      "ar": "لوحة تحكم وسائل التواصل"
+      "en": "Employee Management System",
+      "ar": "منظومة إدارة الموظفين"
+    },
+    "tagline": {
+      "en": "Backend APIs and business logic for HR and employee records.",
+      "ar": "واجهات برمجية ومنطق أعمال لإدارة شؤون الموظفين."
     },
     "description": {
-      "en": "An analytics dashboard for social media metrics with interactive charts and real-time data visualization. Integrates with multiple social media APIs.",
-      "ar": "لوحة تحكم تحليلية لمقاييس وسائل التواصل الاجتماعي مع مخططات تفاعلية وتصور البيانات الفوري. يتكامل مع عدة واجهات برمجية لوسائل التواصل."
+      "en": "Worked as a backend developer within a team, building the APIs, business logic and database layer for employee records, departments and HR workflows.",
+      "ar": "عملت مطور واجهات خلفية ضمن فريق، وبنيت الواجهات البرمجية ومنطق الأعمال وطبقة قاعدة البيانات لسجلات الموظفين والأقسام وإجراءات الموارد البشرية."
     },
-    "technologies": ["React", "Chart.js", "Node.js", "PostgreSQL", "REST API"],
-    "image": "/projects/dashboard.jpg",
-    "demoUrl": "https://demo.example.com",
-    "githubUrl": "https://github.com/yourusername/project",
-    "featured": true
+    "role": {
+      "en": "Backend Developer · Freelance",
+      "ar": "مطور واجهات خلفية · عمل حر"
+    },
+    "year": "2024",
+    "category": "backend",
+    "technologies": [
+      "Express.js",
+      "TypeScript",
+      "TypeORM",
+      "MySQL"
+    ],
+    "highlights": {
+      "en": [
+        "Designed REST endpoints and validation for core HR entities",
+        "Modelled relational data with TypeORM entities on MySQL",
+        "Implemented business rules in a clean service layer"
+      ],
+      "ar": [
+        "تصميم نقاط REST والتحقق من البيانات لكيانات الموارد البشرية",
+        "نمذجة البيانات العلائقية بكيانات TypeORM على MySQL",
+        "تنفيذ قواعد العمل في طبقة خدمات نظيفة"
+      ]
+    },
+    "cover": "/projects/employee-management/cover.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/employee-management/cover.png",
+        "caption": {
+          "en": "API overview",
+          "ar": "نظرة على الواجهات البرمجية"
+        }
+      }
+    ],
+    "featured": false
   },
   {
-    "id": "4",
+    "id": "system-integration",
     "title": {
-      "en": "Blog Platform",
-      "ar": "منصة التدوين"
+      "en": "Enterprise Data Migration & Sync",
+      "ar": "ترحيل ومزامنة بيانات مؤسسية"
+    },
+    "tagline": {
+      "en": "Moving and syncing data between a main enterprise system and a new sub-system.",
+      "ar": "نقل ومزامنة البيانات بين نظام مؤسسي رئيسي ونظام فرعي جديد."
     },
     "description": {
-      "en": "A modern blogging platform with markdown support, user authentication, and comment system. Built with Next.js for optimal SEO performance.",
-      "ar": "منصة تدوين حديثة مع دعم Markdown ومصادقة المستخدمين ونظام التعليقات. تم بناؤها باستخدام Next.js لأداء SEO الأمثل."
+      "en": "Collaborated with a team on a system integration project: data migration and synchronization between the main enterprise system and a new sub-system, handling data transfer, querying and interoperability.",
+      "ar": "عملت مع فريق على مشروع تكامل أنظمة: ترحيل البيانات ومزامنتها بين النظام المؤسسي الرئيسي ونظام فرعي جديد، مع معالجة نقل البيانات والاستعلامات والتوافق بين الأنظمة."
     },
-    "technologies": ["Next.js", "MongoDB", "TypeScript", "TailwindCSS"],
-    "image": "/projects/blog.jpg",
-    "githubUrl": "https://github.com/yourusername/project",
+    "role": {
+      "en": "Full-stack Developer · Freelance",
+      "ar": "مطور متكامل · عمل حر"
+    },
+    "year": "2025",
+    "category": "fullstack",
+    "technologies": [
+      "ASP.NET Core",
+      "Razor Pages",
+      "SQL Server",
+      "C#"
+    ],
+    "highlights": {
+      "en": [
+        "Data transfer pipelines between two live systems",
+        "Complex SQL Server querying and reconciliation",
+        "Razor Pages screens for monitoring the sync"
+      ],
+      "ar": [
+        "مسارات نقل بيانات بين نظامين قيد التشغيل",
+        "استعلامات SQL Server معقدة ومطابقة البيانات",
+        "شاشات Razor Pages لمتابعة المزامنة"
+      ]
+    },
+    "cover": "/projects/system-integration/cover.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/system-integration/cover.png",
+        "caption": {
+          "en": "Sync monitor",
+          "ar": "شاشة متابعة المزامنة"
+        }
+      }
+    ],
+    "featured": false
+  },
+  {
+    "id": "social-media",
+    "title": {
+      "en": "Social Media Platform (Graduation Project)",
+      "ar": "منصة تواصل اجتماعي (مشروع التخرج)"
+    },
+    "tagline": {
+      "en": "A full-stack MERN social network: posts, likes, comments and follows.",
+      "ar": "شبكة تواصل اجتماعي متكاملة بتقنيات MERN: منشورات وإعجابات وتعليقات ومتابعة."
+    },
+    "description": {
+      "en": "My final project at the College of Computer Technology. Users can register, create posts, like, comment and follow each other, built end to end on the MERN stack.",
+      "ar": "مشروع تخرجي من كلية تقنيات الحاسوب. يمكن للمستخدمين التسجيل وإنشاء المنشورات والإعجاب والتعليق ومتابعة بعضهم، مبني بالكامل بتقنيات MERN."
+    },
+    "role": {
+      "en": "Full-stack Developer · Graduation",
+      "ar": "مطور متكامل · مشروع تخرج"
+    },
+    "year": "2024",
+    "category": "fullstack",
+    "technologies": [
+      "MongoDB",
+      "Express.js",
+      "React",
+      "Node.js",
+      "Mongoose"
+    ],
+    "highlights": {
+      "en": [
+        "Authentication and user profiles",
+        "Posts feed with likes and comments",
+        "Follow system between users"
+      ],
+      "ar": [
+        "المصادقة والملفات الشخصية",
+        "خلاصة منشورات مع إعجابات وتعليقات",
+        "نظام متابعة بين المستخدمين"
+      ]
+    },
+    "cover": "/projects/social-media/cover.png",
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/social-media/cover.png",
+        "caption": {
+          "en": "Feed",
+          "ar": "الصفحة الرئيسية"
+        }
+      }
+    ],
+    "githubUrl": "https://github.com/Hammam-swid",
     "featured": false
   }
 ]

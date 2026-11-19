@@ -1,49 +1,69 @@
 // Type definitions for portfolio data
 
+export type Lang = "en" | "ar";
+
+export interface Localized {
+  en: string;
+  ar: string;
+}
+
+export interface LocalizedList {
+  en: string[];
+  ar: string[];
+}
+
+export interface ProjectMedia {
+  type: "image" | "video";
+  /** Path under /public, e.g. /projects/training-system/dashboard.png */
+  src: string;
+  /** Optional poster frame for videos */
+  poster?: string;
+  caption?: Localized;
+}
+
+export type ProjectCategory = "fullstack" | "frontend" | "backend";
+
 export interface Project {
   id: string;
-  title: {
-    en: string;
-    ar: string;
-  };
-  description: {
-    en: string;
-    ar: string;
-  };
+  title: Localized;
+  tagline: Localized;
+  description: Localized;
+  role: Localized;
+  year: string;
+  category: ProjectCategory;
   technologies: string[];
-  image: string;
+  highlights: LocalizedList;
+  /** Cover image shown on cards */
+  cover: string;
+  /** Screenshots and videos shown in the project gallery */
+  media: ProjectMedia[];
   demoUrl?: string;
   githubUrl?: string;
   featured: boolean;
 }
 
 export interface Skill {
-  id: string;
   name: string;
-  category: "frontend" | "backend" | "devops" | "tools";
-  level: number; // 0-100
-  icon?: string;
+  /** e.g. "Basic" — shown as a small badge */
+  level?: Localized;
 }
+
+export interface SkillGroup {
+  id: string;
+  title: Localized;
+  skills: Skill[];
+}
+
+export type ExperienceKind = "job" | "freelance" | "education";
 
 export interface Experience {
   id: string;
-  company: {
-    en: string;
-    ar: string;
-  };
-  position: {
-    en: string;
-    ar: string;
-  };
-  description: {
-    en: string;
-    ar: string;
-  };
-  startDate: string; // YYYY-MM format
-  endDate?: string; // YYYY-MM format or undefined for current
+  kind: ExperienceKind;
+  company: Localized;
+  position: Localized;
+  bullets: LocalizedList;
+  startDate?: string; // YYYY-MM (optional for education)
+  endDate?: string; // YYYY-MM, undefined = present
   technologies: string[];
-  location?: {
-    en: string;
-    ar: string;
-  };
+  location?: Localized;
 }
