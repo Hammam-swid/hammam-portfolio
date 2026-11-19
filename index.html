@@ -1,10 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hammam Swid | همام سويد</title>
+    <meta name="theme-color" content="#0b0e22" />
+    <meta
+      name="description"
+      content="Hammam Swaid — Full-stack developer building React/TypeScript frontends and Node.js, Express and ASP.NET backends."
+    />
+    <title>Hammam Swaid | همام سويد</title>
+    <script>
+      // Apply the saved theme before first paint (dark by default)
+      try {
+        var t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

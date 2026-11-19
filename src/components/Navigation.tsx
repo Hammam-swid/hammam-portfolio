@@ -1,154 +1,244 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import gsap from "gsap";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLang } from "../hooks/useLang";
+import { gsap } from "../lib/gsap";
+import Icon from "./fx/Icon";
 
-const Navigation = () => {
-  const { t, i18n } = useTranslation();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+type Item = { key: string; to: string; section?: string };
 
-  const currentLanguage = i18n.language;
-  const isRTL = currentLanguage === "ar";
+const ITEMS: Item[] = [
+  { key: "about", to: "/#about", section: "about" },
+  { key: "projects", to: "/projects" },
+  { key: "skills", to: "/#skills", section: "skills" },
+  { key: "experience", to: "/#experience", section: "experience" },
+  { key: "contact", to: "/#contact", section: "contact" },
+];
+
+function readTheme(): "dark" | "light" {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+export default function Navigation() {
+  const { t, i18n, lang } = useLang();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string>("");
+  const [theme, setTheme] = useState<"dark" | "light">(readTheme);
+  const linksRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  const onHome = location.pathname === "/";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const current = onHome
+    ? active
+    : location.pathname.startsWith("/projects")
+      ? "projects"
+      : "";
+
+  // Track which home section is in view
   useEffect(() => {
-    // Set HTML dir attribute for RTL
-    document.documentElement.dir = isRTL ? "rtl" : "ltr";
-    document.documentElement.lang = currentLanguage;
-  }, [isRTL, currentLanguage]);
-
-  const toggleLanguage = () => {
-    const newLang = currentLanguage === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLang);
-  };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-
-    if (!isMobileMenuOpen) {
-      gsap.from(".nav-mobile-menu", {
-        opacity: 0,
-        y: -20,
-        duration: 0.3,
-        ease: "power2.out",
+    if (!onHome) return;
+    const ids = ["hero", "about", "work", "skills", "experience", "contact"];
+    const map: Record<string, string> = { hero: "", work: "projects" };
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(map[e.target.id] ?? e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    const t = setTimeout(() => {
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) io.observe(el);
       });
+    }, 300);
+    return () => {
+      clearTimeout(t);
+      io.disconnect();
+    };
+  }, [onHome, location.pathname]);
+
+  // Slide the highlight pill under the active link
+  useLayoutEffect(() => {
+    const pill = pillRef.current;
+    const link = linksRef.current?.querySelector<HTMLElement>(
+      `[data-key="${current}"]`,
+    );
+    if (!pill) return;
+    if (!link) {
+      gsap.to(pill, { opacity: 0, duration: 0.2, overwrite: "auto" });
+      return;
+    }
+    gsap.to(pill, {
+      x: link.offsetLeft,
+      width: link.offsetWidth,
+      opacity: 1,
+      overwrite: "auto",
+      duration: 0.45,
+      ease: "power3.out",
+    });
+  }, [current, lang]);
+
+  // Animate the mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open && overlayRef.current) {
+      gsap.fromTo(
+        overlayRef.current.querySelectorAll("[data-m]"),
+        { y: 40, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          stagger: 0.06,
+          duration: 0.5,
+          ease: "power3.out",
+        },
+      );
+    }
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const go = (item: Item) => (e: React.MouseEvent) => {
+    setOpen(false);
+    if (item.section && onHome) {
+      e.preventDefault();
+      document
+        .getElementById(item.section)
+        ?.scrollIntoView({ behavior: "smooth" });
+      history.replaceState(null, "", `#${item.section}`);
+    } else if (item.section) {
+      e.preventDefault();
+      navigate(item.to);
     }
   };
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsMobileMenuOpen(false);
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      /* storage unavailable */
     }
+    setTheme(next);
   };
 
-  const navItems = [
-    { key: "home", id: "hero" },
-    { key: "projects", id: "projects" },
-    { key: "skills", id: "skills" },
-    { key: "experience", id: "experience" },
-    { key: "contact", id: "contact" },
-  ];
+  const toggleLang = () => i18n.changeLanguage(lang === "en" ? "ar" : "en");
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-[200] py-4 transition-all duration-300 ease-out ${
-        isScrolled
-          ? "bg-[rgba(255,255,255,0.05)] backdrop-blur-[20px] border-b border-[rgba(255,255,255,0.1)] shadow-lg py-3"
-          : ""
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line bg-[color-mix(in_srgb,var(--bg)_78%,transparent)] py-2.5 backdrop-blur-xl"
+          : "border-b border-transparent py-4"
       }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between gap-4">
-          {/* Logo */}
-          <div className="font-display text-2xl md:text-3xl font-bold cursor-pointer transition-transform duration-300 ease-out hover:scale-105">
-            <button
-              onClick={() => scrollToSection("hero")}
-              className="bg-transparent border-0 cursor-pointer"
-            >
-              <img src="/logo.png" alt="logo" className="h-[60px]" />
-            </button>
-          </div>
+      <nav
+        aria-label={t("nav.primary")}
+        className="container-x flex items-center justify-between gap-4"
+      >
+        <Link
+          to="/"
+          aria-label={t("hero.name")}
+          className="flex shrink-0 items-center gap-3"
+          onClick={() => setOpen(false)}
+        >
+          <img
+            src={theme === "light" ? "lightmode-logo.png" : "/logo.png"}
+            alt=""
+            className="h-10 w-auto md:h-11"
+          />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-6 lg:gap-8 list-none m-0 p-0">
-            {navItems.map((item) => (
-              <li key={item.key}>
-                <button
-                  onClick={() => scrollToSection(item.id)}
-                  className="group bg-transparent border-none text-text-secondary font-primary text-base font-medium cursor-pointer px-3 py-2 relative transition-colors duration-300 ease-out hover:text-text-primary after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300 hover:after:w-full"
-                >
-                  {t(`nav.${item.key}`)}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          {/* Language Toggle & Mobile Menu Button */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleLanguage}
-              className="px-4 py-2 text-sm font-semibold rounded-md bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-text-primary transition-all duration-300 ease-out hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:border-transparent hover:shadow-[0_0_20px_rgba(66,135,245,0.4)]"
-              aria-label="Toggle Language"
+        <div
+          ref={linksRef}
+          className="relative hidden items-center gap-1 rounded-full border border-line bg-[color-mix(in_srgb,var(--surface)_60%,transparent)] p-1 lg:flex"
+        >
+          <span
+            ref={pillRef}
+            aria-hidden="true"
+            className="absolute left-0 top-1 h-[calc(100%-8px)] rounded-full bg-tint opacity-0"
+          />
+          {ITEMS.map((item) => (
+            <Link
+              key={item.key}
+              data-key={item.key}
+              to={item.to}
+              onClick={go(item)}
+              aria-current={current === item.key ? "page" : undefined}
+              className={`relative z-10 rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
+                current === item.key ? "text-ink" : "text-muted hover:text-ink"
+              }`}
             >
-              {currentLanguage === "en" ? "AR" : "EN"}
-            </button>
-
-            <button
-              onClick={toggleMobileMenu}
-              className="md:hidden bg-transparent border-none p-2 cursor-pointer"
-              aria-label="Toggle Menu"
-            >
-              <span className="flex flex-col gap-[5px] w-6">
-                <span
-                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
-                    isMobileMenuOpen ? "rotate-45 translate-y-[7px]" : ""
-                  }`}
-                ></span>
-                <span
-                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
-                    isMobileMenuOpen ? "opacity-0" : ""
-                  }`}
-                ></span>
-                <span
-                  className={`block w-full h-0.5 bg-text-primary transition-all duration-300 ease-out ${
-                    isMobileMenuOpen ? "-rotate-45 -translate-y-[7px]" : ""
-                  }`}
-                ></span>
-              </span>
-            </button>
-          </div>
+              {t(`nav.${item.key}`)}
+            </Link>
+          ))}
         </div>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden nav-mobile-menu py-6 mt-4 bg-[rgba(255,255,255,0.05)] backdrop-blur-[20px] rounded-lg border border-[rgba(255,255,255,0.1)]">
-            <ul className="flex flex-col gap-2 list-none m-0 p-0">
-              {navItems.map((item) => (
-                <li key={item.key}>
-                  <button
-                    onClick={() => scrollToSection(item.id)}
-                    className="w-full text-center px-3 py-3 text-lg bg-transparent border-none text-text-secondary font-primary font-medium cursor-pointer transition-colors duration-300 ease-out hover:text-text-primary"
-                  >
-                    {t(`nav.${item.key}`)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </nav>
-  );
-};
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={t("nav.switchTheme")}
+            className="grid h-11 w-11 place-items-center rounded-xl border border-line text-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Icon name={theme === "dark" ? "sun" : "moon"} />
+          </button>
+          <button
+            type="button"
+            onClick={toggleLang}
+            aria-label={t("nav.switchLang")}
+            className="h-11 min-w-11 rounded-xl border border-line px-3 text-sm font-bold text-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            {lang === "en" ? "ع" : "EN"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? t("nav.close") : t("nav.menu")}
+            aria-expanded={open}
+            className="grid h-11 w-11 place-items-center rounded-xl border border-line text-ink lg:hidden"
+          >
+            <Icon name={open ? "close" : "menu"} />
+          </button>
+        </div>
+      </nav>
 
-export default Navigation;
+      {open && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 top-[68px] z-40 flex flex-col gap-2 bg-bg px-6 pt-8 lg:hidden"
+        >
+          {ITEMS.map((item, i) => (
+            <Link
+              key={item.key}
+              data-m
+              to={item.to}
+              onClick={go(item)}
+              className="flex items-baseline gap-4 border-b border-line py-4 text-3xl font-bold"
+            >
+              <span dir="ltr" className="font-mono text-sm text-accent">
+                0{i + 1}
+              </span>
+              {t(`nav.${item.key}`)}
+            </Link>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}

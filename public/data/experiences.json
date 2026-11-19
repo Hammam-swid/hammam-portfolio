@@ -1,67 +1,66 @@
 [
   {
-    "id": "1",
-    "company": {
-      "en": "Tech Solutions Inc.",
-      "ar": "شركة التقنية المتطورة"
+    "id": "freelance",
+    "kind": "freelance",
+    "company": { "en": "Freelance", "ar": "عمل حر" },
+    "position": { "en": "Full-stack Developer", "ar": "مطور ويب متكامل" },
+    "bullets": {
+      "en": [
+        "Led a development team as Team Leader on a Training & Courses Management System, building frontend and backend with a focus on scalability and clean architecture.",
+        "Backend developer on an Employee Management System: APIs, business logic and database integration with Express.js, TypeScript, TypeORM and MySQL.",
+        "System integration project: data migration and synchronization between an enterprise system and a new sub-system with ASP.NET Core, Razor Pages and SQL Server."
+      ],
+      "ar": [
+        "قيادة فريق تطوير بصفتي قائد الفريق في منظومة إدارة التدريب والدورات، وبناء الواجهتين الأمامية والخلفية مع التركيز على قابلية التوسع ونظافة البنية.",
+        "مطور واجهات خلفية في منظومة إدارة الموظفين: واجهات برمجية ومنطق أعمال وربط قواعد البيانات باستخدام Express.js و TypeScript و TypeORM و MySQL.",
+        "مشروع تكامل أنظمة: ترحيل ومزامنة البيانات بين نظام مؤسسي ونظام فرعي جديد باستخدام ASP.NET Core و Razor Pages و SQL Server."
+      ]
     },
-    "position": {
-      "en": "Senior Full-Stack Developer",
-      "ar": "مطور ويب أول متكامل"
-    },
-    "description": {
-      "en": "Led development of scalable web applications using MERN stack. Implemented CI/CD pipelines and mentored junior developers. Improved application performance by 40% through optimization.",
-      "ar": "قيادة تطوير تطبيقات ويب قابلة للتوسع باستخدام MERN. تنفيذ خطوط CI/CD وتوجيه المطورين المبتدئين. تحسين أداء التطبيقات بنسبة 40٪ من خلال التحسين."
-    },
-    "startDate": "2022-01",
-    "technologies": ["React", "Node.js", "MongoDB", "AWS", "Docker"],
-    "location": {
-      "en": "Remote",
-      "ar": "عن بعد"
-    }
+    "startDate": "2024-11",
+    "technologies": ["React", "TypeScript", "Express.js", "TypeORM", "MySQL", "ASP.NET Core", "SQL Server"],
+    "location": { "en": "Part-time · Remote", "ar": "دوام جزئي · عن بعد" }
   },
   {
-    "id": "2",
-    "company": {
-      "en": "Digital Agency",
-      "ar": "الوكالة الرقمية"
+    "id": "adim-tech",
+    "kind": "job",
+    "company": { "en": "Adim Tech", "ar": "Adim Tech" },
+    "position": { "en": "Frontend Developer", "ar": "مطور واجهات أمامية" },
+    "bullets": {
+      "en": [
+        "Developed modern, reusable components using React.js and Tailwind CSS.",
+        "Integrated APIs using Axios and React Query.",
+        "Collaborated with the backend team to implement dynamic features in a scalable e-commerce dashboard.",
+        "Participated in code reviews and daily stand-ups to ensure code quality and project progress."
+      ],
+      "ar": [
+        "تطوير مكونات حديثة وقابلة لإعادة الاستخدام باستخدام React.js و Tailwind CSS.",
+        "ربط الواجهات البرمجية باستخدام Axios و React Query.",
+        "التعاون مع فريق الخادم لتنفيذ ميزات ديناميكية في لوحة تحكم متجر إلكتروني قابلة للتوسع.",
+        "المشاركة في مراجعات الكود والاجتماعات اليومية لضمان جودة الكود وتقدم المشروع."
+      ]
     },
-    "position": {
-      "en": "Full-Stack Developer",
-      "ar": "مطور ويب متكامل"
-    },
-    "description": {
-      "en": "Developed and maintained multiple client projects using modern web technologies. Collaborated with designers and product managers to deliver high-quality solutions.",
-      "ar": "تطوير وصيانة مشاريع متعددة للعملاء باستخدام تقنيات الويب الحديثة. التعاون مع المصممين ومديري المنتجات لتقديم حلول عالية الجودة."
-    },
-    "startDate": "2020-06",
-    "endDate": "2021-12",
-    "technologies": ["React", "Node.js", "PostgreSQL", "Express", "Redux"],
-    "location": {
-      "en": "New York, USA",
-      "ar": "نيويورك، الولايات المتحدة"
-    }
+    "startDate": "2025-01",
+    "endDate": "2026-01",
+    "technologies": ["React", "TypeScript", "Tailwind CSS", "React Query", "Axios"],
+    "location": { "en": "Tripoli, Libya", "ar": "طرابلس، ليبيا" }
   },
   {
-    "id": "3",
-    "company": {
-      "en": "Startup Ventures",
-      "ar": "شركة ناشئة"
+    "id": "education",
+    "kind": "education",
+    "company": { "en": "College of Computer Technology — Tripoli", "ar": "كلية تقنيات الحاسوب — طرابلس" },
+    "position": { "en": "Bachelor's in Computer Technology", "ar": "بكالوريوس تقنية الحاسوب" },
+    "bullets": {
+      "en": [
+        "Focused on web development and software engineering.",
+        "Final project: a full-stack MERN social media website — register, post, like, comment and follow."
+      ],
+      "ar": [
+        "التركيز على تطوير الويب وهندسة البرمجيات.",
+        "مشروع التخرج: موقع تواصل اجتماعي متكامل بتقنيات MERN — تسجيل ونشر وإعجاب وتعليق ومتابعة."
+      ]
     },
-    "position": {
-      "en": "Frontend Developer",
-      "ar": "مطور واجهة أمامية"
-    },
-    "description": {
-      "en": "Built responsive and interactive user interfaces using React and modern CSS. Worked closely with UX team to implement pixel-perfect designs.",
-      "ar": "بناء واجهات مستخدم متجاوبة وتفاعلية باستخدام React و CSS الحديث. العمل بشكل وثيق مع فريق UX لتنفيذ تصاميم دقيقة."
-    },
-    "startDate": "2019-03",
-    "endDate": "2020-05",
-    "technologies": ["React", "JavaScript", "CSS", "HTML", "Git"],
-    "location": {
-      "en": "San Francisco, USA",
-      "ar": "سان فرانسيسكو، الولايات المتحدة"
-    }
+    "endDate": "2024-06",
+    "technologies": ["MongoDB", "Express.js", "React", "Node.js"],
+    "location": { "en": "Tripoli, Libya", "ar": "طرابلس، ليبيا" }
   }
 ]

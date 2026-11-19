@@ -18,6 +18,7 @@
 
     /* Linting */
     "strict": true,
+    "forceConsistentCasingInFileNames": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

@@ -1,140 +1,55 @@
 [
   {
-    "id": "1",
-    "name": "React",
-    "category": "frontend",
-    "level": 95
+    "id": "frontend",
+    "title": { "en": "Frontend", "ar": "الواجهة الأمامية" },
+    "skills": [
+      { "name": "React.js" },
+      { "name": "TypeScript" },
+      { "name": "JavaScript (ES6+)" },
+      { "name": "Tailwind CSS" },
+      { "name": "shadcn/ui" },
+      { "name": "HTML5" },
+      { "name": "CSS3" },
+      { "name": "Redux Toolkit" },
+      { "name": "React Context" },
+      { "name": "React Query" },
+      { "name": "Axios" }
+    ]
   },
   {
-    "id": "2",
-    "name": "TypeScript",
-    "category": "frontend",
-    "level": 90
+    "id": "backend",
+    "title": { "en": "Backend", "ar": "الواجهة الخلفية" },
+    "skills": [
+      { "name": "Node.js" },
+      { "name": "Express.js" },
+      { "name": "RESTful APIs" },
+      { "name": "Nest.js", "level": { "en": "Basic", "ar": "أساسي" } },
+      { "name": "ASP.NET Core" },
+      { "name": "Razor Pages" }
+    ]
   },
   {
-    "id": "3",
-    "name": "JavaScript",
-    "category": "frontend",
-    "level": 95
+    "id": "data",
+    "title": { "en": "Databases", "ar": "قواعد البيانات" },
+    "skills": [
+      { "name": "MySQL" },
+      { "name": "TypeORM" },
+      { "name": "MongoDB" },
+      { "name": "Mongoose" },
+      { "name": "SQL Server" }
+    ]
   },
   {
-    "id": "4",
-    "name": "Next.js",
-    "category": "frontend",
-    "level": 85
-  },
-  {
-    "id": "5",
-    "name": "HTML/CSS",
-    "category": "frontend",
-    "level": 95
-  },
-  {
-    "id": "6",
-    "name": "Redux",
-    "category": "frontend",
-    "level": 85
-  },
-  {
-    "id": "7",
-    "name": "TailwindCSS",
-    "category": "frontend",
-    "level": 90
-  },
-  {
-    "id": "8",
-    "name": "GSAP",
-    "category": "frontend",
-    "level": 80
-  },
-  {
-    "id": "9",
-    "name": "Node.js",
-    "category": "backend",
-    "level": 90
-  },
-  {
-    "id": "10",
-    "name": "Express",
-    "category": "backend",
-    "level": 90
-  },
-  {
-    "id": "11",
-    "name": "MongoDB",
-    "category": "backend",
-    "level": 85
-  },
-  {
-    "id": "12",
-    "name": "PostgreSQL",
-    "category": "backend",
-    "level": 80
-  },
-  {
-    "id": "13",
-    "name": "REST API",
-    "category": "backend",
-    "level": 95
-  },
-  {
-    "id": "14",
-    "name": "GraphQL",
-    "category": "backend",
-    "level": 75
-  },
-  {
-    "id": "15",
-    "name": "Socket.io",
-    "category": "backend",
-    "level": 80
-  },
-  {
-    "id": "16",
-    "name": "Git",
-    "category": "devops",
-    "level": 90
-  },
-  {
-    "id": "17",
-    "name": "Docker",
-    "category": "devops",
-    "level": 75
-  },
-  {
-    "id": "18",
-    "name": "AWS",
-    "category": "devops",
-    "level": 70
-  },
-  {
-    "id": "19",
-    "name": "CI/CD",
-    "category": "devops",
-    "level": 75
-  },
-  {
-    "id": "20",
-    "name": "VS Code",
-    "category": "tools",
-    "level": 95
-  },
-  {
-    "id": "21",
-    "name": "Figma",
-    "category": "tools",
-    "level": 80
-  },
-  {
-    "id": "22",
-    "name": "Postman",
-    "category": "tools",
-    "level": 85
-  },
-  {
-    "id": "23",
-    "name": "Webpack",
-    "category": "tools",
-    "level": 75
+    "id": "tools",
+    "title": { "en": "Tools & Workflow", "ar": "الأدوات وأسلوب العمل" },
+    "skills": [
+      { "name": "Git" },
+      { "name": "GitHub" },
+      { "name": "Postman" },
+      { "name": "Vite" },
+      { "name": "Docker", "level": { "en": "Basic", "ar": "أساسي" } },
+      { "name": "Claude Code" },
+      { "name": "AI-assisted development" }
+    ]
   }
 ]

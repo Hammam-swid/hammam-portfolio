@@ -1,40 +1,55 @@
-import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { useLang } from "../hooks/useLang";
+import Icon from "./fx/Icon";
+import Magnetic from "./fx/Magnetic";
+import { CONTACT } from "../lib/contact";
 
-const Footer = () => {
-  const { t } = useTranslation();
-  const currentYear = new Date().getFullYear();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
+export default function Footer() {
+  const { t } = useLang();
   return (
-    <footer className="bg-bg-primary border-t border-[rgba(255,255,255,0.1)] py-8">
-      <div className="container mx-auto px-6 md:px-8 lg:px-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-text-secondary text-sm">
-            {t("footer.copyright", { year: currentYear })}
-          </p>
-
-          <button
-            onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-primary bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg hover:bg-primary hover:border-primary hover:text-white transition-all duration-300"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 19V5M12 5L5 12M12 5L19 12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span>{t("footer.backToTop")}</span>
-          </button>
+    <footer className="relative overflow-hidden border-t border-line bg-bg">
+      <div className="container-x flex flex-col gap-10 py-14">
+        <a
+          href={`mailto:${CONTACT.email}`}
+          dir="ltr"
+          className="group block w-fit text-[clamp(28px,6vw,80px)] font-black leading-none tracking-tight rtl:ms-auto"
+        >
+          <span className="text-gradient">hmam.swid</span>
+          <span className="text-faint transition-colors group-hover:text-accent">@gmail.com</span>
+        </a>
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/logo.png" alt={t("hero.name")} className="h-10 w-auto" />
+          </Link>
+          <div className="flex flex-col gap-1 text-sm text-faint">
+            <p className="m-0">{t("footer.copyright", { year: new Date().getFullYear() })}</p>
+            <p className="m-0">{t("footer.built")}</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Magnetic>
+              <a
+                href={`${CONTACT.whatsapp}?text=${encodeURIComponent(t("contact.whatsappGreeting"))}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-ghost"
+              >
+                <Icon name="whatsapp" size={18} />
+                {t("contact.whatsappChat")}
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className="btn btn-ghost"
+              >
+                <Icon name="arrowUp" size={18} />
+                {t("footer.backToTop")}
+              </button>
+            </Magnetic>
+          </div>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
