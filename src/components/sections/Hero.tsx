@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../../hooks/useLang";
 import { gsap, useGSAP, MOTION_OK } from "../../lib/gsap";
+import Letters from "../fx/Letters";
 import Magnetic from "../fx/Magnetic";
+import Constellation, { type ConstellationHandle } from "../fx/Constellation";
 import Icon from "../fx/Icon";
 
 const FILES: Record<string, string> = {
@@ -126,71 +128,71 @@ export default function Hero() {
   const { t, lang } = useLang();
   const root = useRef<HTMLElement>(null);
 
+  const field = useRef<ConstellationHandle>(null);
+
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        // Intro
+        const h1 = root.current!.querySelector<HTMLElement>("[data-hero='name']")!;
         const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-        tl.from("[data-hero='eyebrow']", { y: 20, autoAlpha: 0, duration: 0.6 })
-          .from(
-            "[data-hero='word']",
-            { yPercent: 110, duration: 1, stagger: 0.12 },
-            "-=0.3",
-          )
-          .from(
-            "[data-hero='fade']",
-            { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.1 },
-            "-=0.6",
-          )
-          .from(
-            "[data-hero='card']",
-            { y: 60, rotateX: 18, autoAlpha: 0, duration: 1.1 },
-            "-=0.9",
-          );
+        tl.from("[data-hero='eyebrow']", { y: 20, autoAlpha: 0, duration: 0.6 });
 
-        // Scroll-out: content drifts up and fades, orbs move at different speeds
-        gsap.to("[data-hero='content']", {
-          yPercent: -18,
-          autoAlpha: 0.15,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
+        // Letters fly in from scattered positions and assemble the name
+        // (Arabic too: each letter keeps its joined shape, see Letters).
+        tl.from(
+          h1.querySelectorAll("[data-letter]"),
+          {
+            x: () => gsap.utils.random(-260, 260),
+            y: () => gsap.utils.random(-180, 180),
+            rotate: () => gsap.utils.random(-90, 90),
+            scale: () => gsap.utils.random(0.3, 1.8),
+            autoAlpha: 0,
+            filter: "blur(8px)",
+            duration: 1.4,
+            stagger: { each: 0.04, from: "random" },
           },
-        });
-        gsap.utils.toArray<HTMLElement>("[data-orb]").forEach((orb, i) => {
-          gsap.to(orb, {
-            y: (i + 1) * 120,
-            ease: "none",
+          "-=0.3",
+        );
+        tl.from("[data-hero='fade']", { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.1 }, "-=0.9").from(
+          "[data-hero='float']",
+          { y: 80, z: -200, rotateX: 25, autoAlpha: 0, duration: 1.3 },
+          "-=1",
+        );
+
+        // Terminal floats on its own and leans toward the pointer.
+        const card = root.current!.querySelector<HTMLElement>("[data-hero='card']")!;
+        const bob = gsap.to(card, { y: -12, rotateY: -4, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 });
+        const tiltX = gsap.quickTo("[data-hero='tilt']", "rotateX", { duration: 0.9, ease: "power3" });
+        const tiltY = gsap.quickTo("[data-hero='tilt']", "rotateY", { duration: 0.9, ease: "power3" });
+        const onMove = (e: PointerEvent) => {
+          if (e.pointerType !== "mouse") return;
+          tiltY((e.clientX / window.innerWidth - 0.5) * 16);
+          tiltX(-(e.clientY / window.innerHeight - 0.5) * 12);
+        };
+        window.addEventListener("pointermove", onMove, { passive: true });
+
+        // Scroll-out: content recedes, terminal falls back in depth, particles scatter.
+        gsap
+          .timeline({
             scrollTrigger: {
               trigger: root.current,
               start: "top top",
               end: "bottom top",
               scrub: true,
+              onUpdate: (self) => field.current?.scatter(self.progress),
             },
-          });
-        });
+            defaults: { ease: "none" },
+          })
+          .to("[data-hero='content']", { yPercent: -14, scale: 0.9, autoAlpha: 0.1, filter: "blur(6px)" }, 0)
+          .to("[data-hero='float']", { yPercent: 30, z: -320, rotateX: 18, autoAlpha: 0.2 }, 0)
+          .to("[data-orb]", { y: 160 }, 0);
 
-        // Orbs follow the pointer a little
-        const onMove = (e: PointerEvent) => {
-          const nx = e.clientX / window.innerWidth - 0.5;
-          const ny = e.clientY / window.innerHeight - 0.5;
-          gsap.utils
-            .toArray<HTMLElement>("[data-orb-inner]")
-            .forEach((o, i) => {
-              gsap.to(o, {
-                x: nx * 60 * (i + 1),
-                y: ny * 40 * (i + 1),
-                duration: 1.2,
-                ease: "power3.out",
-              });
-            });
+        return () => {
+          window.removeEventListener("pointermove", onMove);
+          bob.kill();
+          field.current?.scatter(0);
         };
-        window.addEventListener("pointermove", onMove);
-        return () => window.removeEventListener("pointermove", onMove);
       });
       return () => mm.revert();
     },
@@ -205,32 +207,14 @@ export default function Hero() {
       id="hero"
       className="noise relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-32"
     >
-      {/* Ambient orbs */}
+      {/* Ambient glow + particle network */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div
           data-orb
-          className="absolute -top-40 start-[-10%] h-[520px] w-[520px]"
-        >
-          <div
-            data-orb-inner
-            className="h-full w-full rounded-full opacity-60 blur-3xl"
-            style={{
-              background: "radial-gradient(circle, #24487d, transparent 70%)",
-            }}
-          />
-        </div>
-        <div
-          data-orb
-          className="absolute top-1/3 end-[-12%] h-[620px] w-[620px]"
-        >
-          <div
-            data-orb-inner
-            className="h-full w-full rounded-full opacity-50 blur-3xl"
-            style={{
-              background: "radial-gradient(circle, #2b87b8, transparent 70%)",
-            }}
-          />
-        </div>
+          className="absolute top-1/4 end-[-12%] h-[620px] w-[620px] rounded-full opacity-40 blur-3xl"
+          style={{ background: "radial-gradient(circle, #2b87b8, transparent 70%)" }}
+        />
+        <Constellation ref={field} className="absolute inset-0 h-full w-full" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
       </div>
 
@@ -254,18 +238,18 @@ export default function Hero() {
             >
               {t("hero.greeting")}
             </p>
-            <h1 className="m-0 text-[52px] font-black leading-[1.12] tracking-tight sm:text-[72px] lg:text-[88px]">
+            <h1
+              data-hero="name"
+              aria-label={t("hero.name")}
+              className="m-0 text-[52px] font-black leading-[1.12] tracking-tight rtl:tracking-normal sm:text-[72px] lg:text-[88px]"
+            >
               {nameWords.map((w, i) => (
                 <span
-                  key={i}
-                  className={`inline-block overflow-hidden pb-2 align-bottom ${i < nameWords.length - 1 ? "me-[0.28em]" : ""}`}
+                  key={`${lang}-${w}`}
+                  aria-hidden="true"
+                  className={`inline-block pb-2 align-bottom ${i < nameWords.length - 1 ? "me-[0.28em]" : ""}`}
                 >
-                  <span
-                    data-hero="word"
-                    className={`inline-block ${i === nameWords.length - 1 ? "text-gradient" : ""}`}
-                  >
-                    {w}
-                  </span>
+                  <Letters text={w} gradient={i === nameWords.length - 1} />
                 </span>
               ))}
             </h1>
@@ -297,7 +281,11 @@ export default function Hero() {
         </div>
 
         <div style={{ perspective: 1200 }}>
-          <Terminal />
+          <div data-hero="float" style={{ transformStyle: "preserve-3d" }}>
+            <div data-hero="tilt" style={{ transformStyle: "preserve-3d" }}>
+              <Terminal />
+            </div>
+          </div>
         </div>
       </div>
 

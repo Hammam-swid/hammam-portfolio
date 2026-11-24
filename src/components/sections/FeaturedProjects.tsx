@@ -18,7 +18,7 @@ import Icon from "../fx/Icon";
 export default function FeaturedProjects() {
   const { t, lang, isRTL } = useLang();
   const { data: projects } = useAsync(ProjectsService.getFeatured);
-  const [open, setOpen] = useState<{ p: Project; i: number } | null>(null);
+  const [open, setOpen] = useState<{ p: Project; i: number; origin?: DOMRect } | null>(null);
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
@@ -88,7 +88,7 @@ export default function FeaturedProjects() {
       >
         {projects?.map((p, i) => (
           <div key={p.id} data-slide className="w-[85%] shrink-0 snap-start sm:w-[60%] lg:w-[34vw] lg:max-w-[460px]">
-            <ProjectCard project={p} index={i} compact onOpen={(pr) => setOpen({ p: pr, i })} />
+            <ProjectCard project={p} index={i} compact onOpen={(pr, origin) => setOpen({ p: pr, i, origin })} />
           </div>
         ))}
         <div data-slide className="flex w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[26%]">
@@ -110,7 +110,7 @@ export default function FeaturedProjects() {
         </div>
       </div>
 
-      {open && <ProjectModal project={open.p} seed={open.i} onClose={() => setOpen(null)} />}
+      {open && <ProjectModal project={open.p} seed={open.i} origin={open.origin} onClose={() => setOpen(null)} />}
     </section>
   );
 }

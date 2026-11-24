@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Project } from "../../types";
 import { useLang } from "../../hooks/useLang";
@@ -11,16 +11,43 @@ export default function ProjectModal({
   project,
   seed,
   onClose,
+  origin,
+  start = 0,
 }: {
   project: Project;
   seed: number;
   onClose: () => void;
+  /** Card media box the modal grows out of (and shrinks back into). */
+  origin?: DOMRect;
+  /** media item to open on */
+  start?: number;
 }) {
   const { t, l, isRTL } = useLang();
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(() => Math.min(start, Math.max(0, project.media.length - 1)));
   const panelRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
+  const closing = useRef(false);
+
+  /** Transform that maps the gallery stage onto the card's media box. */
+  const morphFrom = useCallback(() => {
+    const panel = panelRef.current;
+    const stage = stageRef.current;
+    if (!origin || !panel || !stage || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+    gsap.set(panel, { clearProps: "transform" });
+    const p = panel.getBoundingClientRect();
+    const s = stage.getBoundingClientRect();
+    if (!s.width || !s.height) return null;
+    return {
+      transformOrigin: `${s.left - p.left}px ${s.top - p.top}px`,
+      x: origin.left - s.left,
+      y: origin.top - s.top,
+      scaleX: origin.width / s.width,
+      scaleY: origin.height / s.height,
+    };
+  }, [origin]);
   const media = project.media;
   const current = media[idx];
   // width/height of each media item, learned as it loads
@@ -28,15 +55,24 @@ export default function ProjectModal({
   const portrait = current ? (ratios[current.src] ?? 16 / 9) < 1 : false;
 
   const close = useCallback(() => {
-    gsap.to(panelRef.current, {
-      autoAlpha: 0,
-      y: 30,
-      scale: 0.98,
-      duration: 0.25,
-      ease: "power2.in",
-      onComplete: onClose,
-    });
-  }, [onClose]);
+    if (closing.current) return;
+    closing.current = true;
+    const to = idx === start ? morphFrom() : null;
+    gsap.to(backdropRef.current, { autoAlpha: 0, duration: to ? 0.5 : 0.25, ease: "power2.in" });
+    if (to) {
+      gsap.to(detailsRef.current, { autoAlpha: 0, duration: 0.15 });
+      gsap.to(panelRef.current, { ...to, borderRadius: 20, duration: 0.5, ease: "power3.inOut", onComplete: onClose });
+    } else {
+      gsap.to(panelRef.current, {
+        autoAlpha: 0,
+        y: 30,
+        scale: 0.98,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: onClose,
+      });
+    }
+  }, [onClose, idx, start, morphFrom]);
 
   const goTo = useCallback(
     (next: number, dir: number) => {
@@ -58,19 +94,36 @@ export default function ProjectModal({
     [media.length, idx, goTo],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const prevFocus = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-    gsap.fromTo(
-      panelRef.current,
-      { autoAlpha: 0, y: 40, scale: 0.97 },
-      { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" },
-    );
+    closeRef.current?.focus({ preventScroll: true });
+    const from = morphFrom();
+    gsap.fromTo(backdropRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 });
+    if (from) {
+      // Grow out of the card: the stage starts exactly over the card's media.
+      gsap.fromTo(
+        panelRef.current,
+        { ...from, borderRadius: 20 },
+        { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: 24, duration: 0.7, ease: "expo.inOut", clearProps: "transform,transformOrigin" },
+      );
+      gsap.fromTo(
+        detailsRef.current,
+        { autoAlpha: 0, x: 30 },
+        { autoAlpha: 1, x: 0, duration: 0.5, delay: 0.45, ease: "power3.out" },
+      );
+    } else {
+      gsap.fromTo(
+        panelRef.current,
+        { autoAlpha: 0, y: 40, scale: 0.97 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" },
+      );
+    }
     return () => {
       document.body.style.overflow = "";
-      prevFocus?.focus?.();
+      prevFocus?.focus?.({ preventScroll: true });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- runs once on open
   }, []);
 
   useEffect(() => {
@@ -99,9 +152,10 @@ export default function ProjectModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-[#05060f]/80 backdrop-blur-md md:items-center md:p-6"
+      className="fixed inset-0 z-[80] flex items-end justify-center md:items-center md:p-6"
       onClick={(e) => e.target === e.currentTarget && close()}
     >
+      <div ref={backdropRef} aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#05060f]/80 backdrop-blur-md" />
       <div
         ref={panelRef}
         role="dialog"
@@ -179,7 +233,7 @@ export default function ProjectModal({
         </div>
 
         {/* Details */}
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 md:p-8">
+        <div ref={detailsRef} className="flex min-h-0 min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 md:p-8">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-2">
               <span className="chip w-fit">{t(`projects.filters.${project.category}`)}</span>

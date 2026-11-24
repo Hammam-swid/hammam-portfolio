@@ -1,27 +1,33 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { ProjectCategory } from "../types";
+import type { Project, ProjectCategory } from "../types";
 import { useLang } from "../hooks/useLang";
 import { useAsync } from "../hooks/useAsync";
 import { ProjectsService } from "../services/data";
-import { gsap, Flip, useGSAP, MOTION_OK } from "../lib/gsap";
-import ProjectCard from "../components/projects/ProjectCard";
+import { gsap, ScrollTrigger, useGSAP, MOTION_OK } from "../lib/gsap";
+import { deckTop } from "../lib/deck";
+import DeckPanel from "../components/projects/DeckPanel";
 import ProjectModal from "../components/projects/ProjectModal";
+import Letters from "../components/fx/Letters";
 import Icon from "../components/fx/Icon";
 
 type Filter = "all" | ProjectCategory;
 const FILTERS: Filter[] = ["all", "fullstack", "frontend", "backend"];
 
+/**
+ * Projects as a stacked deck: each panel sticks under the filter bar and the
+ * next one slides over it while the covered one shrinks back and dims.
+ */
 export default function ProjectsPage() {
   const { t, lang } = useLang();
   const { data: projects, loading, error } = useAsync(ProjectsService.getAll);
   const [params, setParams] = useSearchParams();
   const [filter, setFilter] = useState<Filter>("all");
   const root = useRef<HTMLDivElement>(null);
-  const grid = useRef<HTMLDivElement>(null);
-  const flipState = useRef<Flip.FlipState | null>(null);
+  const deck = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLSpanElement>(null);
+  const switching = useRef(false);
 
   const visible = useMemo(
     () => (projects ?? []).filter((p) => filter === "all" || p.category === filter),
@@ -31,58 +37,91 @@ export default function ProjectsPage() {
   const openId = params.get("p");
   const openIndex = projects?.findIndex((p) => p.id === openId) ?? -1;
 
-  // Intro animation
+  // Intro + the big title's letters drift apart as the header scrolls away
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         gsap.from("[data-intro]", { y: 40, autoAlpha: 0, stagger: 0.1, duration: 0.9, ease: "power3.out" });
+        const pieces = gsap.utils.toArray<HTMLElement>("[data-title] [data-letter]");
+        const mid = (pieces.length - 1) / 2;
+        gsap.to(pieces, {
+          x: (i) => (i - mid) * 26,
+          y: (i) => Math.sin(i * 1.7) * 50 - 30,
+          rotate: (i) => (i - mid) * 4,
+          autoAlpha: 0.15,
+          ease: "none",
+          scrollTrigger: { trigger: "[data-header]", start: "top top", end: "bottom top", scrub: 0.4 },
+        });
       });
       return () => mm.revert();
     },
     { scope: root, dependencies: [lang], revertOnUpdate: true },
   );
 
-  // Cards fly in once data arrives
+  // Deck: covered panels shrink and dim. Phones: panels rise in as they arrive.
   useGSAP(
     () => {
-      if (!projects) return;
+      if (!visible.length) return;
+      const panels = gsap.utils.toArray<HTMLElement>("[data-panel]");
       const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        gsap.from("[data-card]", {
-          y: 80,
-          autoAlpha: 0,
-          rotateX: -12,
-          stagger: 0.08,
-          duration: 0.9,
-          ease: "power3.out",
-          clearProps: "transform,opacity,visibility",
+      mm.add(`(min-width: 1024px) and ${MOTION_OK}`, () => {
+        panels.forEach((panel, i) => {
+          const next = panels[i + 1];
+          if (!next) return;
+          gsap.to(panel.querySelector("[data-panel-inner]"), {
+            scale: 0.9,
+            filter: "brightness(0.45) saturate(0.7)",
+            ease: "none",
+            scrollTrigger: { trigger: next, start: "top bottom", end: `top ${deckTop(i + 1)}px`, scrub: true },
+          });
+        });
+      });
+      mm.add(`(max-width: 1023px) and ${MOTION_OK}`, () => {
+        panels.forEach((panel) => {
+          gsap.from(panel.querySelector("[data-panel-inner]"), {
+            y: 70,
+            scale: 0.94,
+            autoAlpha: 0,
+            duration: 0.9,
+            ease: "expo.out",
+            scrollTrigger: { trigger: panel, start: "top 88%", once: true },
+          });
         });
       });
       return () => mm.revert();
     },
-    { scope: root, dependencies: [projects] },
+    { scope: root, dependencies: [visible], revertOnUpdate: true },
   );
 
-  // FLIP between filter states
+  // Filter change: deal the old hand out, then the new one in.
   const changeFilter = (f: Filter) => {
-    if (f === filter) return;
-    if (grid.current) flipState.current = Flip.getState(grid.current.querySelectorAll("[data-card]"));
-    setFilter(f);
+    if (f === filter || switching.current) return;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (calm || !deck.current?.children.length) return setFilter(f);
+    switching.current = true;
+    gsap.to(deck.current.querySelectorAll("[data-panel]"), {
+      autoAlpha: 0,
+      y: 40,
+      rotate: (i) => (i % 2 ? 2 : -2),
+      duration: 0.3,
+      stagger: 0.04,
+      ease: "power2.in",
+      onComplete: () => setFilter(f),
+    });
   };
 
   useLayoutEffect(() => {
-    if (!flipState.current || !grid.current) return;
-    Flip.from(flipState.current, {
-      targets: grid.current.querySelectorAll("[data-card]"),
-      duration: 0.6,
-      ease: "power3.inOut",
-      absolute: true,
-      scale: true,
-      onEnter: (els) => gsap.fromTo(els, { autoAlpha: 0, scale: 0.85 }, { autoAlpha: 1, scale: 1, duration: 0.5, delay: 0.2 }),
-      onLeave: (els) => gsap.to(els, { autoAlpha: 0, scale: 0.85, duration: 0.35 }),
-    });
-    flipState.current = null;
+    if (!switching.current || !deck.current) return;
+    switching.current = false;
+    const top = deck.current.getBoundingClientRect().top + window.scrollY - 150;
+    if (window.scrollY > top) window.scrollTo({ top });
+    gsap.fromTo(
+      deck.current.querySelectorAll("[data-panel]"),
+      { autoAlpha: 0, y: 80, rotate: (i) => (i % 2 ? -3 : 3) },
+      { autoAlpha: 1, y: 0, rotate: 0, duration: 0.8, stagger: 0.08, ease: "expo.out", clearProps: "transform,opacity,visibility" },
+    );
+    ScrollTrigger.refresh();
   }, [filter]);
 
   // Sliding pill under the active filter
@@ -97,13 +136,9 @@ export default function ProjectsPage() {
     const x =
       Number(gsap.getProperty(pill, "x")) + btn.getBoundingClientRect().left - pill.getBoundingClientRect().left;
     gsap.to(pill, { x, width: btn.offsetWidth, duration: 0.45, ease: "power3.out" });
-    // Keep the active tab visible inside the scrollable row
     const r = row.getBoundingClientRect();
     const b = btn.getBoundingClientRect();
-    if (b.left < r.left || b.right > r.right) {
-      // instant: a smooth scroll gets cancelled by the Flip re-layout below
-      btn.scrollIntoView({ inline: "nearest", block: "nearest" });
-    }
+    if (b.left < r.left || b.right > r.right) btn.scrollIntoView({ inline: "nearest", block: "nearest" });
   }, [filter, lang, projects]);
 
   const counts = useMemo(() => {
@@ -112,20 +147,30 @@ export default function ProjectsPage() {
     return c;
   }, [projects]);
 
-  const open = (id: string) => setParams({ p: id }, { replace: false });
-  const close = () => setParams({}, { replace: false });
+  // Where the modal grows from, and which media it starts on (absent for deep links).
+  const [from, setFrom] = useState<{ rect?: DOMRect; start: number }>({ start: 0 });
+  const open = (p: Project, rect: DOMRect | undefined, start: number) => {
+    setFrom({ rect, start });
+    setParams({ p: p.id }, { replace: false });
+  };
+  const close = () => {
+    setFrom({ start: 0 });
+    setParams({}, { replace: false });
+  };
 
   return (
     <div ref={root} className="relative">
-      <header className="grid-bg noise relative overflow-hidden pb-16 pt-36 md:pb-20 md:pt-44">
+      <header data-header className="grid-bg noise relative overflow-hidden pb-16 pt-36 md:pb-20 md:pt-44">
         <div aria-hidden="true" className="pointer-events-none absolute -top-48 end-[-10%] h-[560px] w-[560px] rounded-full opacity-50 blur-3xl" style={{ background: "radial-gradient(circle,#2b87b8,transparent 70%)" }} />
         <div className="container-x relative flex flex-col gap-6">
           <Link data-intro to="/" className="inline-flex w-fit items-center gap-2 text-sm text-muted transition-colors hover:text-accent">
             <Icon name="arrow" size={16} className="ltr:-scale-x-100" />
             {t("projects.back")}
           </Link>
-          <h1 data-intro className="m-0 text-[56px] font-black leading-[1.1] tracking-tight md:text-[96px]">
-            <span className="text-gradient">{t("projects.pageTitle")}</span>
+          <h1 data-intro className="m-0 text-[56px] font-black leading-[1.1] tracking-tight rtl:tracking-normal md:text-[96px]">
+            <span data-title key={lang}>
+              <Letters text={t("projects.pageTitle")} gradient />
+            </span>
             <sup dir="ltr" className="ms-3 align-super font-mono text-xl font-normal text-accent md:text-2xl">
               ({String(projects?.length ?? 0).padStart(2, "0")})
             </sup>
@@ -171,20 +216,15 @@ export default function ProjectsPage() {
         {loading && <p className="text-muted">{t("common.loading")}</p>}
         {error && <p className="text-[#e26b6b]">{t("common.error")}</p>}
 
-        <div ref={grid} className="grid gap-6 [perspective:1400px] md:grid-cols-2 xl:grid-cols-3">
-          {visible.map((p) => {
-            const i = projects!.indexOf(p);
-            return (
-              <div key={p.id} data-card data-flip-id={p.id} className={i === 0 && filter === "all" ? "md:col-span-2" : ""}>
-                <ProjectCard project={p} index={i} size={i === 0 && filter === "all" ? "lg" : "md"} wide={i === 0 && filter === "all"} onOpen={() => open(p.id)} />
-              </div>
-            );
-          })}
+        <div ref={deck} className="flex flex-col gap-8 lg:gap-[22vh] lg:pb-[10vh]">
+          {visible.map((p, i) => (
+            <DeckPanel key={p.id} project={p} index={i} total={visible.length} seed={projects!.indexOf(p)} onOpen={open} />
+          ))}
         </div>
       </section>
 
       {projects && openIndex >= 0 && (
-        <ProjectModal project={projects[openIndex]} seed={openIndex} onClose={close} />
+        <ProjectModal project={projects[openIndex]} seed={openIndex} origin={from.rect} start={from.start} onClose={close} />
       )}
     </div>
   );

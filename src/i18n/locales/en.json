@@ -71,7 +71,10 @@
     "noMedia": "Preview coming soon",
     "mediaCount_one": "{{count}} item",
     "mediaCount_other": "{{count}} items",
-    "back": "Back to home"
+    "back": "Back to home",
+    "spin": "Spin",
+    "wheelHint": "Drag the wheel or hit spin",
+    "nowShowing": "Now showing"
   },
   "skills": {
     "label": "Toolbox",

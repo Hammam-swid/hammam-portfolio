@@ -79,7 +79,10 @@
     "mediaCount_few": "{{count}} عناصر",
     "mediaCount_many": "{{count}} عنصراً",
     "mediaCount_other": "{{count}} عنصر",
-    "back": "العودة للرئيسية"
+    "back": "العودة للرئيسية",
+    "spin": "دوّر",
+    "wheelHint": "اسحب العجلة أو اضغط دوّر",
+    "nowShowing": "المعروض الآن"
   },
   "skills": {
     "label": "صندوق الأدوات",
