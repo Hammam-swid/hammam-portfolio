@@ -5,6 +5,7 @@ import { useLang } from "../hooks/useLang";
 import { gsap } from "../lib/gsap";
 import Icon from "./fx/Icon";
 import { CONTACT } from "../lib/contact";
+import Logo from "./Logo";
 
 type Item = { key: string; to: string; section?: string };
 
@@ -159,12 +160,7 @@ export default function Navigation() {
           className="flex shrink-0 items-center gap-3"
           onClick={() => setOpen(false)}
         >
-          <img
-            loading="lazy"
-            src={theme === "light" ? "lightmode-logo.png" : "/logo.png"}
-            alt=""
-            className="h-10 w-auto md:h-11"
-          />
+          <Logo className="h-10 w-auto md:h-11" />
         </Link>
 
         <div

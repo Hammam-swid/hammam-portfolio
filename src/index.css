@@ -291,6 +291,12 @@
   }
 }
 
+/* Theme-specific logo (components/Logo.tsx) */
+:root[data-theme="light"] .logo-dark,
+:root:not([data-theme="light"]) .logo-light {
+  display: none;
+}
+
 /* Click ripple */
 .ripple {
   position: absolute;

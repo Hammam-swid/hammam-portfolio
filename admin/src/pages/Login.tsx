@@ -31,7 +31,7 @@ export default function Login() {
     <div className="grid min-h-screen place-items-center px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4 p-6">
         <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="" className="size-8" />
+          <img src="/logo.svg" alt="" className="h-8 w-auto" />
           <h1 className="text-lg font-semibold">Portfolio Admin</h1>
         </div>
         <div>

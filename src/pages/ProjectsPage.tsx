@@ -9,6 +9,7 @@ import { deckTop } from "../lib/deck";
 import DeckPanel from "../components/projects/DeckPanel";
 import ProjectModal from "../components/projects/ProjectModal";
 import Letters from "../components/fx/Letters";
+import LogoReveal from "../components/fx/LogoReveal";
 import Icon from "../components/fx/Icon";
 
 type Filter = "all" | ProjectCategory;
@@ -28,6 +29,8 @@ export default function ProjectsPage() {
   const tabsRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLSpanElement>(null);
   const switching = useRef(false);
+  // The logo intro covers the page on arrival; the page's own intro waits for it.
+  const [revealed, setRevealed] = useState(false);
 
   const visible = useMemo(
     () => (projects ?? []).filter((p) => filter === "all" || p.category === filter),
@@ -40,12 +43,14 @@ export default function ProjectsPage() {
   // Intro + the big title's letters drift apart as the header scrolls away
   useGSAP(
     () => {
+      if (!revealed) return;
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         gsap.from("[data-intro]", { y: 40, autoAlpha: 0, stagger: 0.1, duration: 0.9, ease: "power3.out" });
         const pieces = gsap.utils.toArray<HTMLElement>("[data-title] [data-letter]");
         const mid = (pieces.length - 1) / 2;
-        gsap.to(pieces, {
+        // explicit start values: never adopt whatever state the letters happen to be in
+        gsap.fromTo(pieces, { x: 0, y: 0, rotate: 0, autoAlpha: 1 }, {
           x: (i) => (i - mid) * 26,
           y: (i) => Math.sin(i * 1.7) * 50 - 30,
           rotate: (i) => (i - mid) * 4,
@@ -56,7 +61,7 @@ export default function ProjectsPage() {
       });
       return () => mm.revert();
     },
-    { scope: root, dependencies: [lang], revertOnUpdate: true },
+    { scope: root, dependencies: [lang, revealed], revertOnUpdate: true },
   );
 
   // Deck: covered panels shrink and dim. Phones: panels rise in as they arrive.
@@ -152,6 +157,7 @@ export default function ProjectsPage() {
 
   return (
     <div ref={root} className="relative">
+      <LogoReveal onReveal={() => setRevealed(true)} />
       <header data-header className="grid-bg noise relative overflow-hidden pb-16 pt-36 md:pb-20 md:pt-44">
         <div aria-hidden="true" className="pointer-events-none absolute -top-48 end-[-10%] h-[560px] w-[560px] rounded-full opacity-50 blur-3xl" style={{ background: "radial-gradient(circle,#2b87b8,transparent 70%)" }} />
         <div className="container-x relative flex flex-col gap-6">

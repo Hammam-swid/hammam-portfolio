@@ -3,6 +3,7 @@ import { useLang } from "../hooks/useLang";
 import Icon from "./fx/Icon";
 import Magnetic from "./fx/Magnetic";
 import { CONTACT } from "../lib/contact";
+import Logo from "./Logo";
 
 export default function Footer() {
   const { t } = useLang();
@@ -21,12 +22,7 @@ export default function Footer() {
         </a>
         <div className="flex flex-wrap items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3">
-            <img
-              loading="lazy"
-              src="/logo.png"
-              alt={t("hero.name")}
-              className="h-10 w-auto"
-            />
+            <Logo alt={t("hero.name")} className="h-10 w-auto" />
           </Link>
           <div className="flex flex-col gap-1 text-sm text-faint">
             <p className="m-0">

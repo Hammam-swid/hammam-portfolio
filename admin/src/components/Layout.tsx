@@ -15,7 +15,7 @@ export default function Layout() {
       <header className="sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <div className="flex items-center gap-2 font-semibold">
-            <img src="/logo.png" alt="" className="size-7" />
+            <img src="/logo.svg" alt="" className="h-7 w-auto" />
             Portfolio Admin
           </div>
           <nav className="order-3 -mx-1 flex w-full gap-1 overflow-x-auto sm:order-none sm:w-auto">
