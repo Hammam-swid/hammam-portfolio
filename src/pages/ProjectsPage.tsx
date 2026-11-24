@@ -10,6 +10,7 @@ import DeckPanel from "../components/projects/DeckPanel";
 import ProjectModal from "../components/projects/ProjectModal";
 import Letters from "../components/fx/Letters";
 import LogoReveal from "../components/fx/LogoReveal";
+import DotField from "../components/fx/DotField";
 import Icon from "../components/fx/Icon";
 
 type Filter = "all" | ProjectCategory;
@@ -158,7 +159,8 @@ export default function ProjectsPage() {
   return (
     <div ref={root} className="relative">
       <LogoReveal onReveal={() => setRevealed(true)} />
-      <header data-header className="grid-bg noise relative overflow-hidden pb-16 pt-36 md:pb-20 md:pt-44">
+      <header data-header className="noise relative overflow-hidden pb-16 pt-36 md:pb-20 md:pt-44">
+        <DotField />
         <div aria-hidden="true" className="pointer-events-none absolute -top-48 end-[-10%] h-[560px] w-[560px] rounded-full opacity-50 blur-3xl" style={{ background: "radial-gradient(circle,#2b87b8,transparent 70%)" }} />
         <div className="container-x relative flex flex-col gap-6">
           <Link data-intro to="/" className="inline-flex w-fit items-center gap-2 text-sm text-muted transition-colors hover:text-accent">

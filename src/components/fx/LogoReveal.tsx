@@ -4,6 +4,7 @@ import { useLang } from "../../hooks/useLang";
 import { gsap } from "../../lib/gsap";
 import { HOOK_JUNCTION_FROM_END, LOGO_HOOK, LOGO_MAIN, LOGO_SIZE, logoFor } from "../../lib/logo";
 import Letters from "./Letters";
+import DotField from "./DotField";
 
 const COMET = 190; // length of the glowing line, in screen px
 const RUN = 3.6; // seconds for the line to travel in → through the logo → out
@@ -227,7 +228,8 @@ export default function LogoReveal({ onReveal }: { onReveal: () => void }) {
         WebkitMaskImage: `radial-gradient(${holeAt}, transparent var(--hole, 0vmax), #000 calc(var(--hole, 0vmax) + 1px))`,
       }}
     >
-      <div className="grid-bg noise absolute inset-0 bg-bg">
+      <div className="noise absolute inset-0 bg-bg">
+        <DotField />
         <div
           className="absolute h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl"
           style={{ left: g.cx, top: g.cy, background: "radial-gradient(circle, var(--glow), transparent 70%)" }}
