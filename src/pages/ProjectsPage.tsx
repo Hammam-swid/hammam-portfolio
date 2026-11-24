@@ -65,28 +65,20 @@ export default function ProjectsPage() {
       if (!visible.length) return;
       const panels = gsap.utils.toArray<HTMLElement>("[data-panel]");
       const mm = gsap.matchMedia();
-      mm.add(`(min-width: 1024px) and ${MOTION_OK}`, () => {
+      mm.add({ wide: "(min-width: 1024px)", ok: MOTION_OK }, (ctx) => {
+        if (!ctx.conditions!.ok) return;
+        const wide = !!ctx.conditions!.wide;
         panels.forEach((panel, i) => {
           const next = panels[i + 1];
           if (!next) return;
-          gsap.to(panel.querySelector("[data-panel-inner]"), {
-            scale: 0.9,
-            filter: "brightness(0.45) saturate(0.7)",
-            ease: "none",
-            scrollTrigger: { trigger: next, start: "top bottom", end: `top ${deckTop(i + 1)}px`, scrub: true },
-          });
-        });
-      });
-      mm.add(`(max-width: 1023px) and ${MOTION_OK}`, () => {
-        panels.forEach((panel) => {
-          gsap.from(panel.querySelector("[data-panel-inner]"), {
-            y: 70,
-            scale: 0.94,
-            autoAlpha: 0,
-            duration: 0.9,
-            ease: "expo.out",
-            scrollTrigger: { trigger: panel, start: "top 88%", once: true },
-          });
+          // From its normal look to pushed back and dimmed, while the next panel slides over it.
+          const range = { trigger: next, start: "top bottom", end: `top ${deckTop(i + 1, wide)}px`, scrub: true };
+          gsap.fromTo(
+            panel.querySelector("[data-panel-inner]"),
+            { scale: 1 },
+            { scale: wide ? 0.9 : 0.92, ease: "none", scrollTrigger: range },
+          );
+          gsap.fromTo(panel.querySelector("[data-shade]"), { opacity: 0 }, { opacity: 0.6, ease: "none", scrollTrigger: range });
         });
       });
       return () => mm.revert();
@@ -149,8 +141,8 @@ export default function ProjectsPage() {
 
   // Where the modal grows from, and which media it starts on (absent for deep links).
   const [from, setFrom] = useState<{ rect?: DOMRect; start: number }>({ start: 0 });
-  const open = (p: Project, rect: DOMRect | undefined, start: number) => {
-    setFrom({ rect, start });
+  const open = (p: Project, rect: DOMRect | undefined) => {
+    setFrom({ rect, start: 0 });
     setParams({ p: p.id }, { replace: false });
   };
   const close = () => {
@@ -208,7 +200,7 @@ export default function ProjectsPage() {
               </button>
             ))}
           </div>
-          <p className="m-0 text-sm text-faint" aria-live="polite">
+          <p className="m-0 hidden text-sm text-faint sm:block" aria-live="polite">
             {t("projects.count", { count: visible.length })}
           </p>
         </div>
@@ -216,7 +208,7 @@ export default function ProjectsPage() {
         {loading && <p className="text-muted">{t("common.loading")}</p>}
         {error && <p className="text-[#e26b6b]">{t("common.error")}</p>}
 
-        <div ref={deck} className="flex flex-col gap-8 lg:gap-[22vh] lg:pb-[10vh]">
+        <div ref={deck} className="flex flex-col gap-[14vh] pb-[6vh] lg:gap-[22vh] lg:pb-[10vh]">
           {visible.map((p, i) => (
             <DeckPanel key={p.id} project={p} index={i} total={visible.length} seed={projects!.indexOf(p)} onOpen={open} />
           ))}

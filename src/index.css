@@ -309,6 +309,11 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes marquee {
   to {
     transform: translateX(-50%);

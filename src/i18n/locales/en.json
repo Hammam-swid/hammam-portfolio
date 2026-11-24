@@ -43,7 +43,7 @@
   "projects": {
     "label": "Selected work",
     "title": "Featured projects",
-    "subtitle": "Systems I've built and led — drag through them or keep scrolling.",
+    "subtitle": "Systems I've built and led. Scroll to deal the hand, hover a card to pull it out.",
     "viewDemo": "Live demo",
     "viewCode": "Code",
     "details": "Open project",
@@ -72,9 +72,10 @@
     "mediaCount_one": "{{count}} item",
     "mediaCount_other": "{{count}} items",
     "back": "Back to home",
-    "spin": "Spin",
-    "wheelHint": "Drag the wheel or hit spin",
-    "nowShowing": "Now showing"
+    "hoverPlay": "Hover to play",
+    "dragMedia": "Drag to browse",
+    "flipDetails": "Details",
+    "flipMedia": "Media"
   },
   "skills": {
     "label": "Toolbox",
