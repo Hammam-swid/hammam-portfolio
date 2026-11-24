@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ProjectMedia } from "../../types";
 import Icon from "../fx/Icon";
 import { useLang } from "../../hooks/useLang";
+import { mediaUrl } from "../../lib/media";
 
 /**
  * Shows a screenshot or video. If the file isn't there yet, renders a branded
@@ -56,7 +57,7 @@ export default function MediaFrame({
       return (
         <Img
           loading="lazy"
-          src={media.poster}
+          src={mediaUrl(media.poster)}
           alt=""
           className={className}
           onError={() => setFailed()}
@@ -67,8 +68,8 @@ export default function MediaFrame({
       <video
         ref={videoRef}
         key={media.src}
-        src={media.src}
-        poster={media.poster}
+        src={mediaUrl(media.src)}
+        poster={mediaUrl(media.poster)}
         className={`h-full w-full bg-black ${mode === "full" ? "object-contain" : "object-cover"} ${className}`}
         muted={mode !== "full"}
         loop={mode !== "full"}
@@ -97,14 +98,14 @@ export default function MediaFrame({
       >
         <img
           loading="lazy"
-          src={media.src}
+          src={mediaUrl(media.src)}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl"
         />
         <img
           loading="lazy"
-          src={media.src}
+          src={mediaUrl(media.src)}
           alt={alt}
           decoding="async"
           className="relative h-full w-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
@@ -123,7 +124,7 @@ export default function MediaFrame({
   return (
     <Img
       loading="lazy"
-      src={media.src}
+      src={mediaUrl(media.src)}
       alt={alt}
       className={`object-cover object-top ${className}`}
       onError={() => setFailed()}

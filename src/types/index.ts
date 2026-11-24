@@ -14,7 +14,7 @@ export interface LocalizedList {
 
 export interface ProjectMedia {
   type: "image" | "video";
-  /** Path under /public, e.g. /projects/training-system/dashboard.png */
+  /** Path served by the API, e.g. /uploads/projects/<id>/dashboard.png */
   src: string;
   /** Optional poster frame for videos */
   poster?: string;
