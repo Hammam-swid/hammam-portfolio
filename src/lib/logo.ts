@@ -26,6 +26,13 @@ export const LOGO_CENTERLINES = [
   "M 42.9 54.9 H 26.6 C 19.4 54.9 15.3 60.2 15.3 66.2 V 77.6",
 ];
 
+export const LOGO_SIZE = { w: 99.62, h: 109.72 };
+/** The main stroke, and where on it (distance before its end) the hook branches off. */
+export const LOGO_MAIN = LOGO_CENTERLINES[0];
+export const HOOK_JUNCTION_FROM_END = 9.2;
+/** The hook, drawn outward from the junction on the middle bar. */
+export const LOGO_HOOK = "M 15.3 77.6 V 66.2 C 15.3 60.2 19.4 54.9 26.6 54.9 H 42.9";
+
 export function logoFor(theme: "dark" | "light") {
   return theme === "light"
     ? {
