@@ -68,9 +68,25 @@ function Terminal() {
   const typed = full.slice(0, count);
   const done = count >= full.length;
 
+  const tabsRef = useRef<HTMLDivElement>(null);
   const select = (n: string) => {
+    if (n === file) return;
     setFile(n);
     setCount(calm() ? Infinity : 0);
+  };
+  // Arrow keys / Home / End move between tabs (standard tablist keyboard pattern)
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const i = names.indexOf(file);
+    const next =
+      e.key === "ArrowRight" ? (i + 1) % names.length
+      : e.key === "ArrowLeft" ? (i - 1 + names.length) % names.length
+      : e.key === "Home" ? 0
+      : e.key === "End" ? names.length - 1
+      : -1;
+    if (next < 0) return;
+    e.preventDefault();
+    select(names[next]);
+    tabsRef.current?.querySelectorAll<HTMLButtonElement>("[role=tab]")[next]?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
@@ -90,18 +106,23 @@ function Terminal() {
         <span className="h-3 w-3 rounded-full bg-[#e0b04f]" />
         <span className="h-3 w-3 rounded-full bg-[#4fbf87]" />
         <div
+          ref={tabsRef}
           role="tablist"
           aria-label={t("hero.terminalHint")}
-          className="ms-3 flex gap-1 overflow-x-auto"
+          onKeyDown={onTabKey}
+          className="no-scrollbar ms-3 flex min-w-0 gap-1 overflow-x-auto"
         >
           {names.map((n) => (
             <button
               key={n}
+              id={`term-tab-${n}`}
               role="tab"
               type="button"
               aria-selected={file === n}
+              aria-controls="term-panel"
+              tabIndex={file === n ? 0 : -1}
               onClick={() => select(n)}
-              className={`rounded-md px-3 py-1.5 font-mono text-xs transition-colors ${
+              className={`shrink-0 cursor-pointer rounded-md px-3 py-2 font-mono text-xs transition-colors ${
                 file === n
                   ? "bg-tint text-tint-ink"
                   : "text-faint hover:text-ink"
@@ -112,7 +133,12 @@ function Terminal() {
           ))}
         </div>
       </div>
-      <pre className="m-0 min-h-[236px] overflow-x-auto p-5 font-mono text-[13px] leading-6 text-ink md:text-sm">
+      <pre
+        id="term-panel"
+        role="tabpanel"
+        aria-labelledby={`term-tab-${file}`}
+        className="m-0 min-h-[236px] overflow-x-auto p-5 font-mono text-[13px] leading-6 text-ink md:text-sm"
+      >
         <code className={done ? "" : "caret"}>
           <Code text={typed} />
         </code>
@@ -154,9 +180,10 @@ export default function Hero() {
           },
           "-=0.3",
         );
-        tl.from("[data-hero='fade']", { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.1 }, "-=0.9").from(
+        tl.from("[data-hero='fade']", { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.1 }, "-=0.9").fromTo(
           "[data-hero='float']",
-          { y: 80, z: -200, rotateX: 25, autoAlpha: 0, duration: 1.3 },
+          { y: 80, z: -200, rotateX: 25, autoAlpha: 0 },
+          { y: 0, z: 0, rotateX: 0, autoAlpha: 1, duration: 1.3 },
           "-=1",
         );
 
@@ -165,12 +192,29 @@ export default function Hero() {
         const bob = gsap.to(card, { y: -12, rotateY: -4, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 });
         const tiltX = gsap.quickTo("[data-hero='tilt']", "rotateX", { duration: 0.9, ease: "power3" });
         const tiltY = gsap.quickTo("[data-hero='tilt']", "rotateY", { duration: 0.9, ease: "power3" });
+        let steady = false;
         const onMove = (e: PointerEvent) => {
-          if (e.pointerType !== "mouse") return;
+          if (e.pointerType !== "mouse" || steady) return;
           tiltY((e.clientX / window.innerWidth - 0.5) * 16);
           tiltX(-(e.clientY / window.innerHeight - 0.5) * 12);
         };
         window.addEventListener("pointermove", onMove, { passive: true });
+        // Hold the card still while the pointer is on it, so tabs stay where you aim.
+        const hold = () => {
+          steady = true;
+          bob.pause();
+          gsap.to(card, { y: 0, rotateY: 0, duration: 0.4, ease: "power2.out", overwrite: "auto" });
+          tiltX(0);
+          tiltY(0);
+        };
+        const release = () => {
+          steady = false;
+          bob.play();
+        };
+        card.addEventListener("pointerenter", hold);
+        card.addEventListener("pointerleave", release);
+        card.addEventListener("focusin", hold);
+        card.addEventListener("focusout", release);
 
         // Scroll-out: content recedes, terminal falls back in depth, particles scatter.
         gsap
@@ -184,12 +228,29 @@ export default function Hero() {
             },
             defaults: { ease: "none" },
           })
-          .to("[data-hero='content']", { yPercent: -14, scale: 0.9, autoAlpha: 0.1, filter: "blur(6px)" }, 0)
-          .to("[data-hero='float']", { yPercent: 30, z: -320, rotateX: 18, autoAlpha: 0.2 }, 0)
+          // Explicit start values, and the terminal's scroll-out lives on its own wrapper
+          // ([data-hero='out']), so scrolling back up always returns to fully visible
+          // instead of whatever the intro was showing when this was created.
+          .fromTo(
+            "[data-hero='content']",
+            { yPercent: 0, scale: 1, autoAlpha: 1, filter: "blur(0px)" },
+            { yPercent: -14, scale: 0.9, autoAlpha: 0.1, filter: "blur(6px)" },
+            0,
+          )
+          .fromTo(
+            "[data-hero='out']",
+            { yPercent: 0, z: 0, rotateX: 0, autoAlpha: 1 },
+            { yPercent: 30, z: -320, rotateX: 18, autoAlpha: 0.2 },
+            0,
+          )
           .to("[data-orb]", { y: 160 }, 0);
 
         return () => {
           window.removeEventListener("pointermove", onMove);
+          card.removeEventListener("pointerenter", hold);
+          card.removeEventListener("pointerleave", release);
+          card.removeEventListener("focusin", hold);
+          card.removeEventListener("focusout", release);
           bob.kill();
           field.current?.scatter(0);
         };
@@ -205,7 +266,7 @@ export default function Hero() {
     <section
       ref={root}
       id="hero"
-      className="noise relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-32"
+      className="noise relative flex min-h-[100svh] items-center overflow-clip pb-24 pt-32"
     >
       {/* Ambient glow + particle network */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -281,9 +342,11 @@ export default function Hero() {
         </div>
 
         <div style={{ perspective: 1200 }}>
-          <div data-hero="float" style={{ transformStyle: "preserve-3d" }}>
-            <div data-hero="tilt" style={{ transformStyle: "preserve-3d" }}>
-              <Terminal />
+          <div data-hero="out" style={{ transformStyle: "preserve-3d" }}>
+            <div data-hero="float" style={{ transformStyle: "preserve-3d" }}>
+              <div data-hero="tilt" style={{ transformStyle: "preserve-3d" }}>
+                <Terminal />
+              </div>
             </div>
           </div>
         </div>

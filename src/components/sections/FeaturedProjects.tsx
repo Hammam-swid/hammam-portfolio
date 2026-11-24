@@ -245,7 +245,7 @@ export default function FeaturedProjects() {
   const cardSize = "w-[min(58vw,250px)] md:w-[260px] lg:w-[min(22vw,300px)]";
 
   return (
-    <section ref={section} id="work" className="relative flex min-h-[100svh] flex-col justify-center gap-10 overflow-hidden py-24 lg:py-12">
+    <section ref={section} id="work" className="relative flex min-h-[100svh] flex-col justify-center gap-10 overflow-clip py-24 lg:py-12">
       <div className="container-x flex flex-wrap items-end justify-between gap-6">
         <SectionHeading label={t("projects.label")} title={t("projects.title")} subtitle={t("projects.subtitle")} />
         <Magnetic>
